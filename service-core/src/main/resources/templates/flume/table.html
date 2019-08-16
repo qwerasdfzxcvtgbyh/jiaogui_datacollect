@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">任务ID</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="contextId" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">任务名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">任务编码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="code" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">服务器IP</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="serverIp" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <a class="layui-btn" lay-submit="" lay-filter="data-search-btn">搜索</a>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <div class="layui-btn-group">
+            <button class="layui-btn data-add-btn">添加</button>
+            <button class="layui-btn layui-btn-danger data-delete-btn">删除</button>
+            <button class="layui-btn layui-btn-normal data-refresh-btn">刷新</button>
+        </div>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <!-- 这里同样支持 laytpl 语法，如： -->
+            {{#  if( d.runstate == 2 ||  d.runstate == 8 ){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="startFlume">可开启</a>
+            {{#  }else if(d.runstate == 1){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="stopFlume">可关闭</a>
+            <a class="layui-btn layui-btn-xs" lay-event="restartFlume">重启</a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="viewRunInfor">查看运行信息</a>
+            {{#  }else if(d.runstate == 13 ){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="restartFlume">重启</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="stopFlume">删进程</a>
+            {{#  }else{ }}
+            <a class="layui-btn layui-btn-disabled"> 开启中 </a>
+            {{#  }}}
+        </script>
+
+        <script type="text/html" id="baseTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+
+    </div>
+</div>
+
+<script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            util = layui.util,
+            table = layui.table;
+
+        table.render({
+            id: "currentTableId",
+            elem: '#currentTableId',
+            url: '/flumeConfigView/listSelectFlumeConfig',
+            method: 'post',
+            cols: [
+                [
+                    {type: "checkbox", width: 50, fixed: "left"}
+                    , {field: 'contextId', title: '任务ID', width: 170, fixed: 'left', unresize: true}
+                    , {field: 'name', title: '任务名称', width: 140}
+                    , {field: 'code', title: '任务编码', width: 90}
+                    , {field: 'flumeHome', title: 'Flume根目录', minWidth: 180}
+                    , {field: 'profileName', title: '配置文件名', minWidth: 100}
+
+                    , {field: 'serverIp', title: '服务器IP', minWidth: 120, sort: true}
+                    , {field: 'serverPort', title: '监控端口', minWidth: 100, sort: true}
+
+                    , {
+                    field: 'createTime', width: 180, title: '创建时间', templet: function (d) {
+                        return util.toDateString(new Date(d.createTime).getTime());
+                    }
+                }
+                    , {field: 'runStateName', title: '运行状态', width: 120, sort: true}
+                    , {title: '操作', templet: '#currentTableBar', fixed: "right", align: "center", minWidth: 240}
+                    , {title: '基础操作', templet: '#baseTableBar', fixed: "right", align: "center", minWidth: 160}
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            statusCode: 200,
+            page: true,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+            return false;
+        });
+
+        // 监听添加操作
+        $(".data-add-btn").on("click", function () {
+            layer.open({
+                type: 2,
+                title: "添加",
+                shadeClose: true,
+                shade: false,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['893px', '600px'],
+                content: "/flumeConfigView/addFlume?isAdd=1"
+            });
+        });
+
+        // 监听删除操作
+        $(".data-delete-btn").on("click", function () {
+            var checkStatus = table.checkStatus('currentTableId')
+                , data = checkStatus.data;
+
+            var contextList = new Array(data.length);
+            for (var i = 0; i < data.length; i++) {
+                contextList[i] = data[i].contextId;
+            }
+
+            if (contextList.length > 0) {
+                layer.confirm('真的删除所选行么?', {icon: 3, title: '提示'}, function (index) {
+                    FlumeRequest(contextList, "/flumeConfigView/deleteFlumeConfig")
+                });
+            } else {
+                layer.msg("请选择数据！！", {anim: 6, icon: 5});
+            }
+
+        });
+
+        $(".data-refresh-btn").on("click", function () {
+            var checkStatus = table.checkStatus('currentTableId')
+                , data = checkStatus.data;
+
+            var contextList = new Array(data.length);
+            for (var i = 0; i < data.length; i++) {
+                contextList[i] = data[i].contextId;
+            }
+            if (contextList.length > 0) {
+                FlumeRequest(contextList, "/flumeConfigView/refreshFlumeRunStatus")
+            } else {
+                layer.msg("请选择数据！！", {anim: 6, icon: 5});
+            }
+
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var contextId = data.contextId;
+                layer.open({
+                    type: 2,
+                    title: "修改",
+                    shadeClose: true,
+                    shade: false,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['893px', '600px'],
+                    content: "/flumeConfigView/updateFlume?isAdd=0&contextId=" + contextId
+                });
+
+            } else if (obj.event === 'delete') {
+                var contextList = new Array(1);
+                layer.confirm('真的删除行么?', {icon: 3, title: '提示'}, function (index) {
+                    var contextId = data.contextId;
+                    contextList[0] = contextId;
+                    FlumeRequest(contextList, "/flumeConfigView/deleteFlumeConfig")
+                });
+            } else if (obj.event === 'startFlume') {
+                var contextId = data.contextId;
+                layer.confirm('真的开启么?', {icon: 3, title: '提示'}, function (index) {
+                    startAndStopFlume(contextId, "/flumeConfigView/startFlume");
+                });
+            }  else if (obj.event === 'restartFlume') {
+                var contextId = data.contextId;
+                layer.confirm('真的重启么?', {icon: 3, title: '提示'}, function (index) {
+                    startAndStopFlume(contextId, "/flumeConfigView/restartFlume");
+                });
+            }else if (obj.event === 'stopFlume') {
+                var contextId = data.contextId;
+                layer.confirm('真的关闭么?', {icon: 3, title: '提示'}, function (index) {
+                    startAndStopFlume(contextId, "/flumeConfigView/stopFlume");
+                });
+            } else if (obj.event == 'viewRunInfor') {
+                var contextId = data.contextId;
+                var index = layer.load(1)
+                $.ajax({
+                    //请求方式
+                    type: "POST",
+                    //请求的媒体类型
+                    contentType: "application/json;charset=UTF-8",
+                    //请求地址
+                    url: "/flumeConfigView/viewRunInforBefore",
+                    //数据，json字符串
+                    data: JSON.stringify(contextId),
+                    //dataType: 'json',
+                    //请求成功
+                    success: function (result) {
+                        layer.close(index);
+                        if (result.code == 200 && result.data == true) {
+
+                            layer.open({
+                                type: 2,
+                                title: "修改",
+                                shadeClose: true,
+                                shade: false,
+                                resize: false,
+                                maxmin: false,
+                                area: ['893px', '600px'],
+                                content: "/flumeConfigView/viewRunInfor?contextId=" + contextId
+                            });
+
+                        } else {
+                            layer.msg("异常信息：" + result.message, {icon: 5});
+                        }
+                    },
+                    //请求失败，包含具体的错误信息
+                    error: function (e) {
+                        layer.close(index);
+                        layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
+                    }
+                });
+            }
+        });
+
+    });
+
+    function FlumeRequest(contextList, url) {
+        var index = layer.load(1)
+        $.ajax({
+            //请求方式
+            type: "POST",
+            //请求的媒体类型
+            contentType: "application/json;charset=UTF-8",
+            //请求地址
+            url: url,
+            //数据，json字符串
+            data: JSON.stringify(contextList),
+            //dataType: 'json',
+            //请求成功
+            success: function (result) {
+                layer.close(index);
+                if (result.code == 200 && result.data == true) {
+                    layui.table.reload('currentTableId');//重载父页表格，参数为表格ID
+                    layer.msg(result.message, {icon: 6, time: 1000});
+                } else {
+                    layer.msg("异常信息：" + result.message, {icon: 5});
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error: function (e) {
+                layer.close(index);
+                layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
+            }
+        });
+    }
+
+    function startAndStopFlume(contextId, url) {
+        var index = layer.load(1)
+        $.ajax({
+            //请求方式
+            type: "POST",
+            //请求的媒体类型
+            contentType: "application/json;charset=UTF-8",
+            //请求地址
+            url: url,
+            //数据，json字符串
+            data: JSON.stringify(contextId),
+            //dataType: 'json',
+            //请求成功
+            success: function (result) {
+                layer.close(index);
+                if (result.code == 200 && result.data == true) {
+                    layui.table.reload('currentTableId');//重载父页表格，参数为表格ID
+                    layer.msg(result.message, {icon: 6, time: 1000});
+                } else {
+                    layer.msg("异常信息：" + result.message, {icon: 5});
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error: function (e) {
+                layer.close(index);
+                layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
+            }
+
+        });
+    }
+</script>
+<script>
+
+</script>
+
+</body>
+</html>

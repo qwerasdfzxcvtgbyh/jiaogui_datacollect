@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">编码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="code" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-input-inline">
+                                <select name="filetype"  >
+                                    <option value=""></option>
+                                    <option  th:each="filetype : ${filetypes}" th:value="${filetype.id}"
+                                             th:text="${filetype.name }">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <a class="layui-btn" lay-submit="" lay-filter="data-search-btn">搜索</a>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <div class="layui-btn-group">
+            <button class="layui-btn data-add-btn">添加</button>
+            <button class="layui-btn layui-btn-danger data-delete-btn">删除</button>
+        </div>
+        <table class="layui-hide" id="fileTemplateTableId" lay-filter="fileTemplateTableId"></table>
+        <script type="text/html" id="fileTemplateTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+    </div>
+</div>
+
+<script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            util = layui.util,
+            table = layui.table;
+
+        table.render({
+            id: "fileTemplateTableId",
+            elem: '#fileTemplateTableId',
+            url: '/fileTemplateView/listSelectFileTemplate',
+            method: 'post',
+            cols: [
+                [
+                    {type: "checkbox", width: 50, fixed: "left"}
+                    , {field: 'id', title: 'ID', width: 300, fixed: 'left', unresize: true}
+                    , {field: 'name', title: '名称', width: 160}
+                    , {field: 'code', title: '编码', width: 160}
+                    , {field: 'filetypename', title: '类型', width: 160}
+                    , {
+                    field: 'createTime', width: 180, title: '创建时间', templet: function (d) {
+                        return util.toDateString(new Date(d.createTime).getTime());
+                    }
+                }
+                    , {title: '操作', templet: '#fileTemplateTableBar', fixed: "right", align: "center", width: 120}
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            statusCode: 200,
+            page: true,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            //执行搜索重载
+            table.reload('fileTemplateTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+            return false;
+        });
+
+        // 监听添加操作
+        $(".data-add-btn").on("click", function () {
+            layer.open({
+                type: 2,
+                title: "添加",
+                shadeClose: true,
+                shade: false,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['893px', '600px'],
+                content: "/fileTemplateView/addFileTemplate?isAdd=1"
+            });
+        });
+
+        // 监听删除操作
+        $(".data-delete-btn").on("click", function () {
+            var checkStatus = table.checkStatus('fileTemplateTableId')
+                , data = checkStatus.data;
+
+            var contextList = new Array(data.length);
+            for (var i = 0; i < data.length; i++) {
+                contextList[i] = data[i].id;
+            }
+
+            if (contextList.length > 0) {
+                layer.confirm('真的删除所选行?', {icon: 3, title: '提示'}, function (index) {
+                    deleteFlume(contextList);
+                });
+            } else {
+                layer.msg("请选择数据！！", {anim: 6, icon: 5});
+            }
+
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(fileTemplateTableId)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(fileTemplateTableId)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var id = data.id;
+                layer.open({
+                    type: 2,
+                    title: "修改",
+                    shadeClose: true,
+                    shade: false,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['893px', '600px'],
+                    content: "/fileTemplateView/updateFileTemplate?isAdd=0&id=" + id
+                });
+
+            } else if (obj.event === 'delete') {
+                var contextList = new Array(1);
+                layer.confirm('真的删除么?', {icon: 3, title: '提示'}, function (index) {
+                    var id = data.id;
+                    contextList[0] = id;
+                    deleteFlume(contextList);
+                });
+            }
+        });
+
+    });
+
+    function deleteFlume(ids) {
+        $.ajax({
+            //请求方式
+            type: "POST",
+            //请求的媒体类型
+            contentType: "application/json;charset=UTF-8",
+            //请求地址
+            url: "/fileTemplateView/deleteFileTemplate",
+            //数据，json字符串
+            data: JSON.stringify(ids),
+            //dataType: 'json',
+            //请求成功
+            success: function (result) {
+                if (result.code == 200 && result.data == true) {
+                    layui.table.reload('fileTemplateTableId');//重载父页表格，参数为表格ID
+                    layer.msg(result.message, {icon: 6, time: 1000});
+                } else {
+                    layer.msg("异常信息：" + result.message, {icon: 5});
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error: function (e) {
+                layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
+            }
+
+        });
+    }
+</script>
+<script>
+
+</script>
+
+</body>
+</html>

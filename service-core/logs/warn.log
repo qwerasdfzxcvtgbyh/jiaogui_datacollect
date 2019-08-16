@@ -1,0 +1,89 @@
+[WARN ] <2019-08-16 16:39:39,039> at [org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer.logDuplicateJsonObjectsWarning] | click goto-> (DuplicateJsonObjectContextCustomizerFactory.java:86) - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/D:/install/maven/mavendepend/org/json/json/20090211/json-20090211.jar!/org/json/JSONObject.class
+	jar:file:/D:/install/maven/mavendepend/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+[WARN ] <2019-08-16 16:39:41,041> at [org.mybatis.logging.Logger.warn] | click goto-> (Logger.java:44) - No MyBatis mapper was found in '[com.qmtec.agent.dao]' package. Please check your configuration.
+[WARN ] <2019-08-16 16:39:41,041> at [org.springframework.context.annotation.ConfigurationClassPostProcessor.enhanceConfigurationClasses] | click goto-> (ConfigurationClassPostProcessor.java:381) - Cannot enhance @Configuration bean definition 'myBatisMapperScannerConfig' since its singleton instance has been created too early. The typical cause is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor return type: Consider declaring such methods as 'static'.
+[WARN ] <2019-08-16 16:39:48,048> at [org.thymeleaf.templatemode.TemplateMode.parse] | click goto-> (TemplateMode.java:150) - [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+[WARN ] <2019-08-16 17:02:12,012> at [org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer.logDuplicateJsonObjectsWarning] | click goto-> (DuplicateJsonObjectContextCustomizerFactory.java:86) - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/D:/install/maven/mavendepend/org/json/json/20090211/json-20090211.jar!/org/json/JSONObject.class
+	jar:file:/D:/install/maven/mavendepend/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+[WARN ] <2019-08-16 17:02:14,014> at [org.mybatis.logging.Logger.warn] | click goto-> (Logger.java:44) - No MyBatis mapper was found in '[com.qmtec.agent.dao]' package. Please check your configuration.
+[WARN ] <2019-08-16 17:02:14,014> at [org.springframework.context.annotation.ConfigurationClassPostProcessor.enhanceConfigurationClasses] | click goto-> (ConfigurationClassPostProcessor.java:381) - Cannot enhance @Configuration bean definition 'myBatisMapperScannerConfig' since its singleton instance has been created too early. The typical cause is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor return type: Consider declaring such methods as 'static'.
+[WARN ] <2019-08-16 17:02:20,020> at [org.thymeleaf.templatemode.TemplateMode.parse] | click goto-> (TemplateMode.java:150) - [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+[WARN ] <2019-08-16 17:40:34,034> at [org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer.logDuplicateJsonObjectsWarning] | click goto-> (DuplicateJsonObjectContextCustomizerFactory.java:86) - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/D:/install/maven/mavendepend/org/json/json/20090211/json-20090211.jar!/org/json/JSONObject.class
+	jar:file:/D:/install/maven/mavendepend/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+[WARN ] <2019-08-16 17:40:35,035> at [org.mybatis.logging.Logger.warn] | click goto-> (Logger.java:44) - No MyBatis mapper was found in '[com.qmtec.agent.dao]' package. Please check your configuration.
+[WARN ] <2019-08-16 17:40:35,035> at [org.springframework.context.annotation.ConfigurationClassPostProcessor.enhanceConfigurationClasses] | click goto-> (ConfigurationClassPostProcessor.java:381) - Cannot enhance @Configuration bean definition 'myBatisMapperScannerConfig' since its singleton instance has been created too early. The typical cause is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor return type: Consider declaring such methods as 'static'.
+[WARN ] <2019-08-16 17:40:42,042> at [org.thymeleaf.templatemode.TemplateMode.parse] | click goto-> (TemplateMode.java:150) - [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+[WARN ] <2019-08-16 17:40:43,043> at [com.zaxxer.hikari.util.DriverDataSource.<init>] | click goto-> (DriverDataSource.java:68) - Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[WARN ] <2019-08-16 18:00:44,044> at [org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer.logDuplicateJsonObjectsWarning] | click goto-> (DuplicateJsonObjectContextCustomizerFactory.java:86) - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/D:/install/maven/mavendepend/org/json/json/20090211/json-20090211.jar!/org/json/JSONObject.class
+	jar:file:/D:/install/maven/mavendepend/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+[WARN ] <2019-08-16 18:00:45,045> at [org.mybatis.logging.Logger.warn] | click goto-> (Logger.java:44) - No MyBatis mapper was found in '[com.qmtec.agent.dao]' package. Please check your configuration.
+[WARN ] <2019-08-16 18:00:45,045> at [org.springframework.context.annotation.ConfigurationClassPostProcessor.enhanceConfigurationClasses] | click goto-> (ConfigurationClassPostProcessor.java:381) - Cannot enhance @Configuration bean definition 'myBatisMapperScannerConfig' since its singleton instance has been created too early. The typical cause is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor return type: Consider declaring such methods as 'static'.
+[WARN ] <2019-08-16 18:00:53,053> at [org.thymeleaf.templatemode.TemplateMode.parse] | click goto-> (TemplateMode.java:150) - [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+[WARN ] <2019-08-16 18:00:55,055> at [com.zaxxer.hikari.util.DriverDataSource.<init>] | click goto-> (DriverDataSource.java:68) - Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[WARN ] <2019-08-16 18:27:41,041> at [org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer.logDuplicateJsonObjectsWarning] | click goto-> (DuplicateJsonObjectContextCustomizerFactory.java:86) - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/D:/install/maven/mavendepend/org/json/json/20090211/json-20090211.jar!/org/json/JSONObject.class
+	jar:file:/D:/install/maven/mavendepend/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+[WARN ] <2019-08-16 18:27:42,042> at [org.mybatis.logging.Logger.warn] | click goto-> (Logger.java:44) - No MyBatis mapper was found in '[com.qmtec.agent.dao]' package. Please check your configuration.
+[WARN ] <2019-08-16 18:27:42,042> at [org.springframework.context.annotation.ConfigurationClassPostProcessor.enhanceConfigurationClasses] | click goto-> (ConfigurationClassPostProcessor.java:381) - Cannot enhance @Configuration bean definition 'myBatisMapperScannerConfig' since its singleton instance has been created too early. The typical cause is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor return type: Consider declaring such methods as 'static'.
+[WARN ] <2019-08-16 18:27:49,049> at [org.thymeleaf.templatemode.TemplateMode.parse] | click goto-> (TemplateMode.java:150) - [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+[WARN ] <2019-08-16 18:27:50,050> at [com.zaxxer.hikari.util.DriverDataSource.<init>] | click goto-> (DriverDataSource.java:68) - Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[WARN ] <2019-08-16 18:55:40,040> at [org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer.logDuplicateJsonObjectsWarning] | click goto-> (DuplicateJsonObjectContextCustomizerFactory.java:86) - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/D:/install/maven/mavendepend/org/json/json/20090211/json-20090211.jar!/org/json/JSONObject.class
+	jar:file:/D:/install/maven/mavendepend/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+[WARN ] <2019-08-16 18:55:41,041> at [org.mybatis.logging.Logger.warn] | click goto-> (Logger.java:44) - No MyBatis mapper was found in '[com.qmtec.agent.dao]' package. Please check your configuration.
+[WARN ] <2019-08-16 18:55:41,041> at [org.springframework.context.annotation.ConfigurationClassPostProcessor.enhanceConfigurationClasses] | click goto-> (ConfigurationClassPostProcessor.java:381) - Cannot enhance @Configuration bean definition 'myBatisMapperScannerConfig' since its singleton instance has been created too early. The typical cause is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor return type: Consider declaring such methods as 'static'.
+[WARN ] <2019-08-16 18:55:48,048> at [org.thymeleaf.templatemode.TemplateMode.parse] | click goto-> (TemplateMode.java:150) - [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+[WARN ] <2019-08-16 18:55:49,049> at [com.zaxxer.hikari.util.DriverDataSource.<init>] | click goto-> (DriverDataSource.java:68) - Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[WARN ] <2019-08-16 19:12:41,041> at [org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer.logDuplicateJsonObjectsWarning] | click goto-> (DuplicateJsonObjectContextCustomizerFactory.java:86) - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/D:/install/maven/mavendepend/org/json/json/20090211/json-20090211.jar!/org/json/JSONObject.class
+	jar:file:/D:/install/maven/mavendepend/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+[WARN ] <2019-08-16 19:12:43,043> at [org.mybatis.logging.Logger.warn] | click goto-> (Logger.java:44) - No MyBatis mapper was found in '[com.qmtec.agent.dao]' package. Please check your configuration.
+[WARN ] <2019-08-16 19:12:43,043> at [org.springframework.context.annotation.ConfigurationClassPostProcessor.enhanceConfigurationClasses] | click goto-> (ConfigurationClassPostProcessor.java:381) - Cannot enhance @Configuration bean definition 'myBatisMapperScannerConfig' since its singleton instance has been created too early. The typical cause is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor return type: Consider declaring such methods as 'static'.
+[WARN ] <2019-08-16 19:12:49,049> at [org.thymeleaf.templatemode.TemplateMode.parse] | click goto-> (TemplateMode.java:150) - [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+[WARN ] <2019-08-16 19:12:50,050> at [com.zaxxer.hikari.util.DriverDataSource.<init>] | click goto-> (DriverDataSource.java:68) - Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.

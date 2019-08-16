@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>Flume信息配置</legend>
+        </fieldset>
+
+        <form class="layui-form" action="" lay-filter="example" th:object="${flumeConfig}">
+            <input type="hidden" name="contextId" class="layui-input" th:field="*{contextId}">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">任务名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="例：mysql库采集"
+                           class="layui-input" th:field="*{name}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">任务编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="code" lay-verify="required" lay-reqtext="任务编码是必填项，岂能为空？"
+                           placeholder="例：mysql001"
+                           autocomplete="off" class="layui-input" th:field="*{code}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">flume根目录</label>
+                <div class="layui-input-block">
+                    <input type="text" name="flumeHome" lay-verify="required" lay-reqtext="flume根目录是必填项，岂能为空？"
+                           placeholder="例：/opt/flume" autocomplete="off" class="layui-input" th:field="*{flumeHome}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">配置文件名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="profileName" lay-verify="required" lay-reqtext="配置文件名是必填项，岂能为空？"
+                           placeholder="例：flume_test" autocomplete="off" class="layui-input" th:field="*{profileName}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">Agent名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="agentName" lay-verify="required" lay-reqtext="Agent名是必填项，岂能为空？"
+                           placeholder="例：mk" autocomplete="off" class="layui-input" th:field="*{agentName}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">服务器IP</label>
+                <div class="layui-input-block">
+                    <input type="text" name="serverIp" lay-verify="serverIP" lay-reqtext="服务器IP是必填项，岂能为空？"
+                           placeholder="例：192.168.1.1" autocomplete="off" class="layui-input" th:field="*{serverIp}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">服务器PORT</label>
+                <div class="layui-input-block">
+                    <input type="text" name="serverPort" lay-verify="serverPort" lay-reqtext="服务器PORT是必填项，岂能为空？"
+                           placeholder="例：10060" autocomplete="off" class="layui-input" th:field="*{serverPort}">
+                </div>
+            </div>
+
+            <!--<div class="layui-form-item">
+                <label class="layui-form-label">文件模板</label>
+                <div class="layui-input-block">
+                    <select name="interest"  lay-filter="file_template">
+                        <option value=""></option>
+
+                        <option th:each="fileTemplate : ${fileTemplates}" th:value="${fileTemplate.id}"
+                                th:text="${fileTemplate.name }">
+
+                    </select>
+                </div>
+            </div>-->
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">模板类型</label>
+                <div class="layui-input-block">
+                    <select name="flumeConfigType" th:field="*{flumeConfigType}" lay-verify="required"
+                            lay-reqtext="模板类型是必选项，岂能为空？">
+                        <option value=""></option>
+
+                        <option th:each="flumeConfigType : ${flumeConfigTypes}" th:value="${flumeConfigType.id}"
+                                th:text="${flumeConfigType.name }">
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+
+                <label class="layui-form-label">文件内容</label>
+                <div class="layui-input-block">
+
+                    <select name="interest" lay-filter="file_template">
+                        <option value=""></option>
+                        <option th:each="fileTemplate : ${fileTemplates}" th:value="${fileTemplate.id}"
+                                th:text="${fileTemplate.name }">
+                    </select>
+
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="fileConfigContent" id="fileConfigContent"
+                              lay-verify="required" style="height: 200px" th:field="*{fileConfigContent}"></textarea>
+
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="例：Mysql采集到Kafka" class="layui-textarea" name="remark"
+                              th:field="*{remark}"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script th:inline="javascript">
+    var isAdd = [[${isAdd}]];
+
+    if (isAdd != 1) {
+        $("input[name='name']").attr("readOnly", "true");
+        $("input[name='name']").css("color", "gray");
+        $("input[name='code']").attr("readOnly", "true");
+        $("input[name='code']").css("color", "gray");
+        $("select[name='flumeConfigType']").attr("disabled","disabled");
+    }
+</script>
+
+
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+        //创建一个编辑器
+        // var editIndex = layedit.build('LAY_demo_editor');
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 3) {
+                    return '标题至少得3个字符啊';
+                }
+            }
+            , serverIP: [
+                /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+                , '请检查IP格式'
+            ]
+        });
+
+        //监听文件模板选择
+        form.on('select(file_template)', function (data) {
+            var file_template_id = data.value;
+            if (file_template_id != null && file_template_id != "") {
+                $.ajax({
+                    //请求方式
+                    type: "POST",
+                    //请求的媒体类型
+                    contentType: "application/json;charset=UTF-8",
+                    //请求地址
+                    url: "/fileTemplateView/getFileTemplateContentById",
+                    //数据，json字符串
+                    data: file_template_id,
+                    //dataType: 'json',
+                    //请求成功
+                    success: function (result) {
+                        if (result.code == 200) {
+                            $("#fileConfigContent").val(result.data);
+                        } else {
+                            layer.msg("异常信息：" + result.message, {icon: 5});
+                        }
+                    },
+                    //请求失败，包含具体的错误信息
+                    error: function (e) {
+                        layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
+                    }
+                });
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var fileConfigContent = $("#fileConfigContent").val();
+            if (fileConfigContent != null && fileConfigContent != "") {
+                var index = layer.load(1)
+                $.ajax({
+                    //请求方式
+                    type: "POST",
+                    //请求的媒体类型
+                    contentType: "application/json;charset=UTF-8",
+                    //请求地址
+                    url: "/flumeConfigView/addOrUpdateFlume",
+                    //数据，json字符串
+                    data: JSON.stringify(data.field),
+                    //dataType: 'json',
+                    //请求成功
+                    success: function (result) {
+                        layer.close(index);
+                        if (result.code == 200 && result.data == true) {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            parent.layui.table.reload('currentTableId');//重载父页表格，参数为表格ID
+                            parent.layer.msg(result.message, {icon: 6, time: 1000});
+                        } else {
+                            layer.msg("异常信息：" + result.message, {icon: 5});
+                        }
+                    },
+                    //请求失败，包含具体的错误信息
+                    error: function (e) {
+                        layer.close(index);
+                        layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
+                    }
+                });
+            } else {
+                layer.msg('配置文件内容不能为空！', {anim: 6, icon: 5});
+            }
+            return false;
+        });
+
+        //表单初始赋值
+        /*form.val('example', {
+            "username": "贤心" // "name": "value"
+            , "password": "123456"
+            , "interest": 1
+            , "like[write]": true //复选框选中状态
+            , "close": true //开关状态
+            , "sex": "女"
+            , "desc": "我爱 layui"
+        })*/
+
+
+    });
+</script>
+
+</body>
+</html>

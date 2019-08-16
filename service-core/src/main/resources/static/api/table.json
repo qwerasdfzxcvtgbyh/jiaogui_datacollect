@@ -1,0 +1,23 @@
+{
+  "count": 1,
+  "data": [{
+    "contextId": 123,
+    "name": "test",
+    "code": "test_01",
+    "flumeHome": "/home/flume/flume190",
+    "profileName": "flume_test",
+    "agentName": null,
+    "serverIp": "192.168.15.60",
+    "fileConfigContent": null,
+    "remark": null,
+    "runstate": 2,
+    "runStateName": "未开启",
+    "monitorPort": null,
+    "processPid": null,
+    "createTime": null,
+    "modifyTime": null,
+    "startupTime": null
+  }],
+  "code": 0,
+  "msg": ""
+}

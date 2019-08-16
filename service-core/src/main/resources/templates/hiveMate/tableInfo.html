@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <div class="layui-tab" lay-filter="test">
+            <ul class="layui-tab-title">
+                <li>表字段信息</li>
+                <li>表基本信息</li>
+                <li>表索引信息</li>
+                <li>表分区信息</li>
+            </ul>
+
+            <div class="layui-tab-content">
+
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn layui-btn-normal data-preview-btn">预览</button>
+                    </div>
+                    <table class="layui-hide" id="fieldInfo" lay-filter="fieldInfo"></table>
+                </div>
+
+                <div class="layui-tab-item">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">表ID</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" autocomplete="off"
+                                   class="layui-input" th:field="*{tableBaseInfo.tableID}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">表名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" autocomplete="off"
+                                   class="layui-input" th:field="*{tableBaseInfo.tableName}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所有者</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="code"
+                                   autocomplete="off" class="layui-input" th:field="*{tableBaseInfo.owner}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">创建时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="flumeHome"
+                                   autocomplete="off" class="layui-input" th:field="*{tableBaseInfo.createTime}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">最近一次更新时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="flumeHome"
+                                   autocomplete="off" class="layui-input" th:field="*{tableBaseInfo.lastUpdateTime}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">存储格式</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="profileName" autocomplete="off" class="layui-input"
+                                   th:field="*{tableBaseInfo.inputFormat}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">存储路径</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="profileName" autocomplete="off" class="layui-input"
+                                   th:field="*{tableBaseInfo.location}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">表类型</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="profileName" autocomplete="off" class="layui-input"
+                                   th:field="*{tableBaseInfo.tableType}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否为分区表</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="profileName" autocomplete="off" class="layui-input"
+                                   th:field="*{tableBaseInfo.hasPartition}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">字段分隔符</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="profileName" autocomplete="off" class="layui-input"
+                                   th:field="*{tableBaseInfo.fieldDelimiter}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否压缩</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="profileName" autocomplete="off" class="layui-input"
+                                   th:field="*{tableBaseInfo.isCompress}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">压缩格式</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="profileName" autocomplete="off" class="layui-input"
+                                   th:field="*{tableBaseInfo.compressFormat}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">拥有字段数量</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="serverIp"
+                                   autocomplete="off" class="layui-input" th:field="*{tableBaseInfo.fieldsCount}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">描述</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="serverIp"
+                                   autocomplete="off" class="layui-input" th:field="*{tableBaseInfo.comment}">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-tab-item">
+                    <table class="layui-hide" id="indexInfo" lay-filter="indexInfo"></table>
+                </div>
+
+                <div class="layui-tab-item">
+                    <div>
+                        <div class="layui-btn-group">
+                            <button class="layui-btn" id="btn-expand">全部展开</button>
+                            <button class="layui-btn" id="btn-fold">全部折叠</button>
+                        </div>
+                        <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 操作列 -->
+<script type="text/html" id="auth-state">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+
+<script th:inline="javascript">
+    var TabId = [[${TabId}]];
+    $("input").attr("readOnly", "true");
+</script>
+<script>
+    layui.config({
+        base: '/lib/lay-module/'
+    }).extend({
+        treetable: 'treetable-lay/treetable'
+    }).use(['table', 'element', 'treetable'], function () {
+
+        var $ = layui.jquery;
+        var table = layui.table;
+        var element = layui.element;
+        var treetable = layui.treetable;
+        var util = layui.util;
+
+        //Hash地址的定位
+        var layid = location.hash.replace(/^#test=/, '');
+        element.tabChange('test', layid);
+        element.on('tab(test)', function (elem) {
+            location.hash = 'test=' + $(this).attr('lay-id');
+        });
+
+        //表字段信息
+        table.render({
+            id: "fieldInfo",
+            elem: '#fieldInfo',
+            url: '/hiveMateView/listSelectTableFieldInfo',
+            method: 'post',
+            cols: [
+                [
+                    {type: 'numbers'},
+                    {field: 'field', title: '字段', width: 140}
+                    , {field: 'type', title: '类型', width: 160}
+                    , {
+                    field: 'isPartitionFiled', title: '分区字段', width: 140, templet: function (d) {
+                        var str = "";
+                        if (d.isPartitionFiled == true) {
+                            str = "<span style=' color: red'>true</span>";
+                        }else{
+                            str = "<span >false</span>";
+                        }
+                        return str;
+                    }
+                }
+                    , {field: 'isIndexFiled', title: '索引字段', width: 140}
+                    , {field: 'comment', title: '描述'}
+                ]
+            ],
+            where: {
+                TabId: TabId
+            },
+            statusCode: 200,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+        });
+
+        //数据预览
+        $(".data-preview-btn").on("click", function () {
+            var index = parent.parent.layer.open({
+                type: 2,
+                title: "数据预览",
+                maxmin: true,
+                area: ['600px', '500px'],
+                content: "/hiveMateView/jumpDataPreview/"+TabId
+            });
+            layer.full(index);
+        });
+
+
+        //表索引信息
+        table.render({
+            id: "indexInfo",
+            elem: '#indexInfo',
+            url: '/hiveMateView/listSelectTableIndexInfo',
+            method: 'post',
+            cols: [
+                [
+                    {field: 'indexID', title: '索引ID', width: 140}
+                    , {field: 'indexName', title: '索引名', width: 160}
+                    , {
+                    field: 'createTime', title: '创建时间', templet: function (d) {
+                        return util.toDateString(new Date(d.createTime).getTime());
+                    }
+                }
+                    , {field: 'fieldName', title: '作用字段', minWidth: 120}
+                    , {field: 'fieldType', title: '字段类型', minWidth: 120}
+                    , {field: 'handlerClass', title: '索引处理类'}
+                ]
+            ],
+            where: {
+                TabId: TabId
+            },
+            statusCode: 200,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+        });
+
+
+        // 渲染表格
+        layer.load(2);
+        treetable.render({
+            treeColIndex: 0,
+            treeSpid: -1,
+            treeIdName: 'authorityId',
+            treePidName: 'parentId',
+            elem: '#munu-table',
+            url: '/hiveMateView/listSelectTablePartitionInfo/' + TabId,
+            page: false,
+            cols: [
+                [
+                    {field: 'authorityName', width: 200, title: '分区字段'}
+                    , {field: 'createTime', width: 200, title: '创建时间'}
+                    , {field: 'menuUrl', title: '分区路径'}
+                    //,{templet: '#auth-state', width: 120,align: 'center', title: '操作'}
+                ]
+            ],
+            done: function () {
+                layer.closeAll('loading');
+            }
+        });
+
+
+        //展开 折叠
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#munu-table');
+        });
+
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#munu-table');
+        });
+
+        //监听工具条
+        table.on('tool(munu-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'del') {
+                layer.msg('删除' + data.id);
+            } else if (layEvent === 'edit') {
+                layer.msg('修改' + data.id);
+            }
+        });
+
+
+    });
+</script>
+
+</body>
+</html>
