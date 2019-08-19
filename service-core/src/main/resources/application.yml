@@ -1,0 +1,21 @@
+server:
+  port: 8696
+spring:
+  application:
+    name: service-core
+  profiles:
+    active: dev
+  aop:
+    auto: true
+
+
+
+
+
+
+
+
+
+
+
+

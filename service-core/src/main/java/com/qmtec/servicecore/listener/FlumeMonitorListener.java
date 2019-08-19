@@ -1,11 +1,6 @@
 package com.qmtec.servicecore.listener;
 
-import com.qmtec.common.entity.flume.FlumeMonitor;
-import com.qmtec.servicecore.entity.FlumeConfig;
-import com.qmtec.servicecore.model.vo.FlumeConfigVo;
-import com.qmtec.servicecore.service.flume.FlumeConfigService;
 import com.qmtec.servicecore.service.flume.FlumeMomitorProcess;
-import com.qmtec.servicecore.service.flume.analytical.AnalyticalServices;
 import com.qmtec.servicecore.service.flumeMonitor.FlumeMonitorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 import java.util.concurrent.*;
 
 @Component

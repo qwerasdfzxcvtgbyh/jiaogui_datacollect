@@ -12,7 +12,7 @@ public class MyBatisMapperScannerConfig {
     public MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
         mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
-        mapperScannerConfigurer.setBasePackage("com.qmtec.agent.dao");
+        mapperScannerConfigurer.setBasePackage("com.qmtec.servicecore.dao");
         return mapperScannerConfigurer;
     }
 }

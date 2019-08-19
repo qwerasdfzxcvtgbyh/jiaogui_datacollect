@@ -431,9 +431,10 @@ public class HiveMateServiceImpl implements HiveMateService {
                     String name = "";
                     if (tbPartitionKeysList.size() > 0) {
                         for (TbPartitionKeys tbPartitionKeys : tbPartitionKeysList) {
-                            name = name + "/" + tbPartitionKeys.getPkeyName();
+                            name = name  + tbPartitionKeys.getPkeyName() + "|";
                         }
                     }
+                    name = name.substring(0,name.lastIndexOf("|"));
 
                     //开始组装： 父级
                     TablePartitionInfoDto tablePartitionInfoDto = TablePartitionInfoDto.builder().build();

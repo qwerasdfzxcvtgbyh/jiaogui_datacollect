@@ -119,8 +119,6 @@ public class FlumeMonitorServiceImpl implements FlumeMonitorService {
                     log.debug("ContextId : " + contextId + "任运行");
 
                     String content = flumeMonitor.getFlumeMonitorContent();
-
-
                     synchronized (this){
                         analyticalServices.analyticalContent(contextId, content);//解析内容
                     }
