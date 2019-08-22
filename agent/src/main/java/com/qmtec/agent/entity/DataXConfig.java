@@ -1,4 +1,4 @@
-package com.qmtec.servicecore.entity;
+package com.qmtec.agent.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

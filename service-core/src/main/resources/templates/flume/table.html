@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
     <link rel="stylesheet" href="/css/public.css" media="all">
+
 </head>
 <body>
 <div class="layuimini-container">
@@ -71,7 +72,7 @@
             <a class="layui-btn layui-btn-xs" lay-event="restartFlume">重启</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="stopFlume">删进程</a>
             {{#  }else{ }}
-            <a class="layui-btn layui-btn-disabled"> 开启中 </a>
+            <a class="layui-btn layui-btn-xs layui-btn-disabled"> 开启中 </a>
             {{#  }}}
         </script>
 
@@ -86,7 +87,7 @@
 
 <script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
 <script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
-
+<script src="/comment/comment.js"></script>
 <script>
     layui.use(['form', 'table'], function () {
         var $ = layui.jquery,
@@ -159,7 +160,7 @@
                 shadeClose: true,
                 shade: false,
                 maxmin: true, //开启最大化最小化按钮
-                area: ['893px', '600px'],
+                area: ['893px', '800px'],
                 content: "/flumeConfigView/addFlume?isAdd=1"
             });
         });
@@ -215,7 +216,7 @@
                     shadeClose: true,
                     shade: false,
                     maxmin: true, //开启最大化最小化按钮
-                    area: ['893px', '600px'],
+                    area: ['893px', '800px'],
                     content: "/flumeConfigView/updateFlume?isAdd=0&contextId=" + contextId
                 });
 
@@ -229,17 +230,17 @@
             } else if (obj.event === 'startFlume') {
                 var contextId = data.contextId;
                 layer.confirm('真的开启么?', {icon: 3, title: '提示'}, function (index) {
-                    startAndStopFlume(contextId, "/flumeConfigView/startFlume");
+                    startAndStop(JSON.stringify(contextId), "/flumeConfigView/startFlume");
                 });
             }  else if (obj.event === 'restartFlume') {
                 var contextId = data.contextId;
                 layer.confirm('真的重启么?', {icon: 3, title: '提示'}, function (index) {
-                    startAndStopFlume(contextId, "/flumeConfigView/restartFlume");
+                    startAndStop(JSON.stringify(contextId), "/flumeConfigView/restartFlume");
                 });
             }else if (obj.event === 'stopFlume') {
                 var contextId = data.contextId;
                 layer.confirm('真的关闭么?', {icon: 3, title: '提示'}, function (index) {
-                    startAndStopFlume(contextId, "/flumeConfigView/stopFlume");
+                    startAndStop(JSON.stringify(contextId), "/flumeConfigView/stopFlume");
                 });
             } else if (obj.event == 'viewRunInfor') {
                 var contextId = data.contextId;
@@ -314,37 +315,7 @@
             }
         });
     }
-
-    function startAndStopFlume(contextId, url) {
-        var index = layer.load(1)
-        $.ajax({
-            //请求方式
-            type: "POST",
-            //请求的媒体类型
-            contentType: "application/json;charset=UTF-8",
-            //请求地址
-            url: url,
-            //数据，json字符串
-            data: JSON.stringify(contextId),
-            //dataType: 'json',
-            //请求成功
-            success: function (result) {
-                layer.close(index);
-                if (result.code == 200 && result.data == true) {
-                    layui.table.reload('currentTableId');//重载父页表格，参数为表格ID
-                    layer.msg(result.message, {icon: 6, time: 1000});
-                } else {
-                    layer.msg("异常信息：" + result.message, {icon: 5});
-                }
-            },
-            //请求失败，包含具体的错误信息
-            error: function (e) {
-                layer.close(index);
-                layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
-            }
-
-        });
-    }
+    
 </script>
 <script>
 

@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * DataxConfig
  * 控制器
  */
 @Controller
-@RequestMapping("/DataxConfigView")
-public class DataxConfigViewController {
+@RequestMapping("/DataXConfigView")
+public class DataXConfigViewController {
 
     @Autowired
     private DataxConfigService dataxConfigService;
@@ -140,4 +141,53 @@ public class DataxConfigViewController {
         return resultModel;
     }
 
+    /**--------------------------------------**/
+
+    @RequestMapping("/startDataX")
+    @ResponseBody
+    public ResultModel<Boolean> startDataX(@RequestBody String data) {
+
+        ResultModel<Boolean> resultModel = new ResultModel<>();
+        Map<String, Object> map = dataxConfigService.startDataX(data);
+        resultModel.setCode((int) map.get("code"));
+        resultModel.setData((Boolean) map.get("data"));
+        resultModel.setMessage((String) map.get("message"));
+
+        return resultModel;
+    }
+
+    /**
+     * 重启DataX
+     *
+     * @return
+     */
+    @RequestMapping("/restartDataX")
+    @ResponseBody
+    public ResultModel<Boolean> restartDataX(@RequestBody String data) {
+
+        ResultModel<Boolean> resultModel = new ResultModel<>();
+        Map<String, Object> map = dataxConfigService.restartDataX(data);
+        resultModel.setData((Boolean) map.get("data"));
+        resultModel.setMessage((String) map.get("message"));
+
+        return resultModel;
+    }
+
+    /**
+     * 停止DataX
+     *
+     * @return
+     */
+    @RequestMapping("/stopDataX")
+    @ResponseBody
+    public ResultModel<Boolean> stopDataX(@RequestBody String data) {
+
+        ResultModel<Boolean> resultModel = new ResultModel<>();
+        Map<String, Object> map = dataxConfigService.stopDataX(data);
+        resultModel.setCode((int) map.get("code"));
+        resultModel.setData((Boolean) map.get("data"));
+        resultModel.setMessage((String) map.get("message"));
+
+        return resultModel;
+    }
 }

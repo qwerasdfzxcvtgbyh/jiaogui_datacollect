@@ -53,9 +53,7 @@ public class FlumeConfigController {
     public ResultModel<FlumeConfigBo> selectOneFlumeConfigByContextId(@RequestBody FlumeConfigVo flumeConfigVo) {
 
         this.valid(flumeConfigVo);
-
         ResultModel<FlumeConfigBo> resultModel = new ResultModel<>();
-
         resultModel.setData(flumeConfigService.selectOneFlumeConfigByContextId(flumeConfigVo));
         resultModel.setMessage("查询成功");
 
@@ -72,9 +70,7 @@ public class FlumeConfigController {
     public ResultModel<FlumeConfigBo> queryPartialFieldsFlumeConfigByContextId(@RequestBody FlumeConfigVo flumeConfigVo) {
 
         this.valid(flumeConfigVo);
-
         ResultModel<FlumeConfigBo> resultModel = new ResultModel<>();
-
         resultModel.setData(flumeConfigService.queryPartialFieldsFlumeConfigByContextId(flumeConfigVo));
         resultModel.setMessage("查询成功");
 
@@ -92,9 +88,7 @@ public class FlumeConfigController {
     public ResultModel<Boolean> receiveCheckFlumeConfigByContextId(@RequestBody FlumeConfigVo flumeConfigVo) {
 
         this.valid(flumeConfigVo);
-
         ResultModel<Boolean> resultModel = new ResultModel<Boolean>();
-
         resultModel.setData(flumeConfigService.receiveCheckFlumeConfigByContextId(flumeConfigVo));
         resultModel.setMessage("查询成功");
 
@@ -112,9 +106,7 @@ public class FlumeConfigController {
             @RequestBody FlumeConfigVo flumeConfigVo) {
 
         this.valid(flumeConfigVo);
-
         ResultModel<Boolean> resultModel = new ResultModel<>();
-
         resultModel.setData(flumeConfigService.updateFlumeConfigByProcesspidAndMonitorportAndRunstateAndContextId(flumeConfigVo));
         resultModel.setMessage("更新成功");
 
@@ -132,9 +124,7 @@ public class FlumeConfigController {
             @RequestBody FlumeConfigVo flumeConfigVo) {
 
         this.valid(flumeConfigVo);
-
         ResultModel<Boolean> resultModel = new ResultModel<>();
-
         resultModel.setData(flumeConfigService.updateFlumeConfigByContextIdAndRunstate(flumeConfigVo));
         resultModel.setMessage("更新成功");
 
@@ -152,7 +142,6 @@ public class FlumeConfigController {
             @RequestBody FlumeConfigVo flumeConfigVo) {
 
         ResultModel<Boolean> resultModel = new ResultModel<>();
-
         resultModel.setData(flumeConfigService.verifyMonitorPortIsAvailableByServerIp(flumeConfigVo));
         resultModel.setMessage("查询成功");
 
@@ -167,8 +156,8 @@ public class FlumeConfigController {
      */
     @RequestMapping("/queryFlumeConfigByServerIpAndRunstate")
     public ResultModel<List<FlumeConfigBo>> queryFlumeConfigByServerIpAndRunstate(@RequestBody FlumeConfigVo flumeConfigVo) {
-        ResultModel<List<FlumeConfigBo>> resultModel = new ResultModel<>();
 
+        ResultModel<List<FlumeConfigBo>> resultModel = new ResultModel<>();
         resultModel.setData(flumeConfigService.queryFlumeConfigByServerIpAndRunstate(flumeConfigVo));
         resultModel.setMessage("查询成功");
 

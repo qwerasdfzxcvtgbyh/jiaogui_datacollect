@@ -119,7 +119,7 @@ public class FlumeService {
                     flumeConfigManage.updateFlumeConfigByContextIdAndRunstate(contextId, FlumeConfig.Runstate.FAIL.getValue());
                     log.debug("contextId :" + contextId + "==》更改运行状态为：“启动失败”,异常信息 ：" + e.getMessage());
                     e.printStackTrace();
-                    throw new CustomException("启动失败", HttpCode.CODE_500);
+                    throw new CustomException("启动失败,异常信息：" + e.getMessage(), HttpCode.CODE_500);
                 }
             } else {
                 throw new CustomException("contextId :" + contextId + "==> 状态不合符，已拒绝", HttpCode.CODE_400);
@@ -173,7 +173,7 @@ public class FlumeService {
                     flumeConfigManage.updateFlumeConfigByContextIdAndRunstate(contextId, FlumeConfig.Runstate.FAIL.getValue());
                     log.debug("contextId :" + contextId + "==》更改运行状态为：“启动失败”,异常信息 ：" + e.getMessage());
                     e.printStackTrace();
-                    throw new CustomException("启动失败", HttpCode.CODE_500);
+                    throw new CustomException("启动失败,异常信息：" + e.getMessage(), HttpCode.CODE_500);
                 }
             } else {
                 throw new CustomException("contextId :" + contextId + "==> 状态不合符，已拒绝");
@@ -203,7 +203,6 @@ public class FlumeService {
         flumeConfigManage.updateFlumeConfigByContextIdAndRunstate(contextId, FlumeConfig.Runstate.CREATEPROFILE.getValue());
         log.debug("contextId :" + contextId + "==》更改运行状态为：“创建配置文件”");
     }
-
 
     /**
      * 根据serverIp创建flume可用端口

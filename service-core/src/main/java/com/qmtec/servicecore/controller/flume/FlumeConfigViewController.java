@@ -86,7 +86,6 @@ public class FlumeConfigViewController {
 
     private List<JSONObject> getFlumeTaskType(){
         List<JSONObject> list = new ArrayList<>();
-
         FlumeTaskType[] flumeTaskTypes = FlumeTaskType.values();
         for(FlumeTaskType flumeTaskType : flumeTaskTypes ){
             JSONObject json = new JSONObject();
@@ -94,7 +93,6 @@ public class FlumeConfigViewController {
             json.put("name",flumeTaskType.getName());
             list.add(json);
         }
-
         return  list;
     }
 
@@ -107,12 +105,9 @@ public class FlumeConfigViewController {
     public ModelAndView addFlume(int isAdd) {
 
         ModelAndView modelAndView = new ModelAndView();
-
         modelAndView.addObject("fileTemplates",
                 fileTemplateService.getFileTemplateByFileType(FileTemplate.Filetype.FLUME.getValue()));
-
         modelAndView.addObject("flumeConfigTypes",this.getFlumeTaskType());
-
         modelAndView.addObject("isAdd", isAdd);
         modelAndView.addObject("flumeConfig", new FlumeConfigDto());
         modelAndView.setViewName("/flume/form");
@@ -129,12 +124,9 @@ public class FlumeConfigViewController {
     public ModelAndView updateFlume(int isAdd, Long contextId) {
 
         ModelAndView modelAndView = new ModelAndView();
-
         modelAndView.addObject("fileTemplates",
                 fileTemplateService.getFileTemplateByFileType(FileTemplate.Filetype.FLUME.getValue()));
-
         modelAndView.addObject("flumeConfigTypes",this.getFlumeTaskType());
-
         modelAndView.addObject("isAdd", isAdd);
         modelAndView.addObject("flumeConfig", flumeConfigService.updateFlumeConfigBefore(contextId));
         modelAndView.setViewName("/flume/form");
@@ -187,7 +179,6 @@ public class FlumeConfigViewController {
     public ResultModel<Boolean> startFlume(@RequestBody String data) {
 
         ResultModel<Boolean> resultModel = new ResultModel<>();
-
         Map<String, Object> map = flumeConfigService.startFlume(data);
         resultModel.setCode((int) map.get("code"));
         resultModel.setData((Boolean) map.get("data"));
@@ -240,7 +231,6 @@ public class FlumeConfigViewController {
     public ModelAndView viewRunInfor(Long contextId) {
 
         ModelAndView modelAndView = new ModelAndView();
-
         modelAndView.addObject("flumeConfig", flumeConfigService.viewRunInfor(contextId));
         modelAndView.setViewName("/flume/monitorInfo");
 
@@ -257,7 +247,6 @@ public class FlumeConfigViewController {
     public ResultModel<Boolean> restartFlume(@RequestBody String data) {
 
         ResultModel<Boolean> resultModel = new ResultModel<>();
-
         Map<String, Object> map = flumeConfigService.restartFlume(data);
         resultModel.setData((Boolean) map.get("data"));
         resultModel.setMessage((String) map.get("message"));

@@ -5,10 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.qmtec.common.exception.CustomException;
 import com.qmtec.common.page.ListResult;
 import com.qmtec.common.web.HttpCode;
+import com.qmtec.servicecore.comm.CommHttpReq;
 import com.qmtec.servicecore.dao.DataXConfigMapper;
 import com.qmtec.servicecore.entity.DataXConfig;
 import com.qmtec.servicecore.entity.example.DataXConfigExample;
+import com.qmtec.servicecore.model.bo.DataxConfigBo;
 import com.qmtec.servicecore.model.dto.DataxConfigDto;
+import com.qmtec.servicecore.model.vo.DataxConfigVo;
 import com.qmtec.servicecore.service.datax.DataxConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +35,14 @@ public class DataxConfigServiceImpl implements DataxConfigService {
                         .code(dataxConfigDto.getCode())
                         .serverIp(dataxConfigDto.getServerIp())
                         .serverPort(dataxConfigDto.getServerPort())
+                        .dataxHome(dataxConfigDto.getDataxHome())
                         .jsonFileName(dataxConfigDto.getJsonFileName())
-                        .jsonFilePath(dataxConfigDto.getJsonFilePath())
                         .jsonFileContent(dataxConfigDto.getJsonFileContent())
-                        .pythonscriptPath(dataxConfigDto.getPythonscriptPath())
                         .pythonscriptFileName(dataxConfigDto.getPythonscriptFileName())
                         .pythonscriptContent(dataxConfigDto.getPythonscriptContent())
                         .remark(dataxConfigDto.getRemark())
+                        .jsonSwitch(dataxConfigDto.getJsonSwitch())
+                        .pythonSwitch(dataxConfigDto.getPythonSwitch())
                         .createTime(new Date())
                         .modifyTime(new Date())
                         .build()
@@ -47,13 +51,14 @@ public class DataxConfigServiceImpl implements DataxConfigService {
                 , DataXConfig.Column.code
                 , DataXConfig.Column.serverIp
                 , DataXConfig.Column.serverPort
+                , DataXConfig.Column.dataxHome
                 , DataXConfig.Column.jsonFileName
-                , DataXConfig.Column.jsonFilePath
                 , DataXConfig.Column.jsonFileContent
-                , DataXConfig.Column.pythonscriptPath
                 , DataXConfig.Column.pythonscriptFileName
                 , DataXConfig.Column.pythonscriptContent
                 , DataXConfig.Column.remark
+                , DataXConfig.Column.jsonSwitch
+                , DataXConfig.Column.pythonSwitch
                 , DataXConfig.Column.createTime
                 , DataXConfig.Column.modifyTime
         );
@@ -67,26 +72,28 @@ public class DataxConfigServiceImpl implements DataxConfigService {
                         .builder()
                         .serverIp(dataxConfigDto.getServerIp())
                         .serverPort(dataxConfigDto.getServerPort())
+                        .dataxHome(dataxConfigDto.getDataxHome())
                         .jsonFileName(dataxConfigDto.getJsonFileName())
-                        .jsonFilePath(dataxConfigDto.getJsonFilePath())
                         .jsonFileContent(dataxConfigDto.getJsonFileContent())
-                        .pythonscriptPath(dataxConfigDto.getPythonscriptPath())
                         .pythonscriptFileName(dataxConfigDto.getPythonscriptFileName())
                         .pythonscriptContent(dataxConfigDto.getPythonscriptContent())
                         .remark(dataxConfigDto.getRemark())
+                        .jsonSwitch(dataxConfigDto.getJsonSwitch())
+                        .pythonSwitch(dataxConfigDto.getPythonSwitch())
                         .modifyTime(new Date())
                         .build(),
                 DataXConfigExample.newAndCreateCriteria()
                         .andIdEqualTo(dataxConfigDto.getId()).example()
                 , DataXConfig.Column.serverIp
                 , DataXConfig.Column.serverPort
+                , DataXConfig.Column.dataxHome
                 , DataXConfig.Column.jsonFileName
-                , DataXConfig.Column.jsonFilePath
                 , DataXConfig.Column.jsonFileContent
-                , DataXConfig.Column.pythonscriptPath
                 , DataXConfig.Column.pythonscriptFileName
                 , DataXConfig.Column.pythonscriptContent
                 , DataXConfig.Column.remark
+                , DataXConfig.Column.jsonSwitch
+                , DataXConfig.Column.pythonSwitch
                 , DataXConfig.Column.modifyTime
         );
     }
@@ -197,16 +204,24 @@ public class DataxConfigServiceImpl implements DataxConfigService {
                             .id(dataXConfig.getId())
                             .name(dataXConfig.getName())
                             .code(dataXConfig.getCode())
+                            .dataxHome(dataXConfig.getDataxHome() == null ? "" : dataXConfig.getDataxHome())
                             .jsonFileName(dataXConfig.getJsonFileName())
-                            .jsonFilePath(dataXConfig.getJsonFilePath())
                             .pythonscriptFileName(dataXConfig.getPythonscriptFileName())
-                            .pythonscriptPath(dataXConfig.getPythonscriptPath())
                             .serverIp(dataXConfig.getServerIp())
                             .serverPort(dataXConfig.getServerPort())
                             .runstate(dataXConfig.getRunstate())
                             .createTime(dataXConfig.getCreateTime())
                             .build();
-                    //FlumeConfig.Runstate[] runstates = FlumeConfig.Runstate.values();
+
+                    //dataXConfig.Runstate[] runstates = dataXConfig.Runstate.values();
+                    DataXConfig.Runstate[] runstates = DataXConfig.Runstate.values();
+                    for (DataXConfig.Runstate runstate : runstates) {
+                        if (runstate.getValue().equals(dataXConfig.getRunstate())) {
+                            dataxConfigDto.setRunstateName(runstate.getName());
+                            break;
+                        }
+                    }
+
                     dataxConfigDtos.add(dataxConfigDto);
                 });
 
@@ -236,15 +251,16 @@ public class DataxConfigServiceImpl implements DataxConfigService {
                         .id(dataXConfig.getId())
                         .name(dataXConfig.getName())
                         .code(dataXConfig.getCode())
-                        .jsonFilePath(dataXConfig.getJsonFilePath())
+                        .dataxHome(dataXConfig.getDataxHome())
                         .jsonFileName(dataXConfig.getJsonFileName())
                         .jsonFileContent(dataXConfig.getJsonFileContent())
-                        .pythonscriptPath(dataXConfig.getPythonscriptPath())
                         .pythonscriptFileName(dataXConfig.getPythonscriptFileName())
                         .pythonscriptContent(dataXConfig.getPythonscriptContent())
                         .serverIp(dataXConfig.getServerIp())
                         .serverPort(dataXConfig.getServerPort())
                         .remark(dataXConfig.getRemark())
+                        .jsonSwitch(dataXConfig.getJsonSwitch())
+                        .pythonSwitch(dataXConfig.getPythonSwitch())
                         .build();
             } else {
                 throw new CustomException("Data does not exist", HttpCode.CODE_400);
@@ -277,7 +293,7 @@ public class DataxConfigServiceImpl implements DataxConfigService {
                 if (optionalDataXConfigs.isPresent()) {
                     List<DataXConfig> dataXConfigs = optionalDataXConfigs.get();
 
-                    if(dataXConfigs.size() > 0){
+                    if (dataXConfigs.size() > 0) {
                         dataXConfigs.forEach(dataXConfig -> {
                             if (!DataXConfig.Runstate.UNOPENED.getValue().equals(dataXConfig.getRunstate())
                                     && !DataXConfig.Runstate.FAIL.getValue().equals(dataXConfig.getRunstate())
@@ -292,7 +308,7 @@ public class DataxConfigServiceImpl implements DataxConfigService {
                                         .example()) > 0) {
                             falg = true;
                         }
-                    }else{
+                    } else {
                         throw new CustomException("No data queried ", HttpCode.CODE_400);
                     }
 
@@ -308,4 +324,384 @@ public class DataxConfigServiceImpl implements DataxConfigService {
         }
         return falg;
     }
+
+    public DataXConfig selectOnedataXConfig(String id) {
+        DataXConfig dataXConfig = null;
+
+        Optional<DataXConfig> dataXConfigOptional = null;
+        try {
+            dataXConfigOptional = Optional.ofNullable(
+                    dataXConfigMapper.selectOneByExampleSelective(
+                            DataXConfigExample.newAndCreateCriteria().andIdEqualTo(id).example()));
+        } catch (Exception e) {
+            log.error("Data Query Failure >>> [{}]", JSON.toJSONString(e.getMessage()));
+            throw new CustomException("Data Query Failure", HttpCode.CODE_500);
+        }
+
+        if (dataXConfigOptional.isPresent()) {
+            dataXConfig = dataXConfigOptional.get();
+        } else {
+            throw new CustomException("Data does not exist", HttpCode.CODE_400);
+        }
+        return dataXConfig;
+    }
+
+    /**
+     * --------------------------------------------------------------------------------------------------------
+     **/
+
+    @Override
+    public DataxConfigBo selectOneDataxConfigById(DataxConfigVo dataxConfigVo) {
+        DataxConfigBo dataxConfigBo = new DataxConfigBo();
+
+        Optional<DataXConfig> optionalDataXConfig = null;
+        try {
+            optionalDataXConfig = Optional.ofNullable(dataXConfigMapper.selectOneByExampleWithBLOBs(
+                    DataXConfigExample.newAndCreateCriteria()
+                            .andIdEqualTo(dataxConfigVo.getId())
+                            .example()));
+
+            if (optionalDataXConfig.isPresent()) {
+                DataXConfig dataXConfig = optionalDataXConfig.get();
+                dataxConfigBo = DataxConfigBo.builder()
+                        .id(dataXConfig.getId())
+                        .name(dataXConfig.getName())
+                        .code(dataXConfig.getCode())
+                        .dataxHome(dataXConfig.getDataxHome())
+                        .jsonFileContent(dataXConfig.getJsonFileContent())
+                        .jsonFileName(dataXConfig.getJsonFileName())
+                        .pythonscriptContent(dataXConfig.getPythonscriptContent())
+                        .pythonscriptFileName(dataXConfig.getPythonscriptFileName())
+                        .serverIp(dataXConfig.getServerIp())
+                        .runstate(dataXConfig.getRunstate())
+                        .jsonSwitch(dataXConfig.getJsonSwitch())
+                        .pythonSwitch(dataXConfig.getPythonSwitch())
+                        .build();
+            } else {
+                throw new CustomException(" Data does not exist ");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(e.getMessage(), HttpCode.CODE_500);
+        }
+        return dataxConfigBo;
+    }
+
+    @Override
+    public Boolean updateDataXConfigByIdAndRunstate(DataxConfigVo dataxConfigVo) {
+        Boolean flag = false;
+
+        Integer runstate = dataxConfigVo.getRunstate();
+        if (runstate != null && runstate != 0) {
+            flag = updateDataXConfigByIdAndRunstate(dataxConfigVo.getId(), runstate);
+        } else {
+            throw new CustomException("Parametric anomaly ");
+        }
+
+        return flag;
+    }
+
+    private Boolean updateDataXConfigByIdAndRunstate(String id, Integer runstate) {
+        Boolean flag = false;
+
+        DataXConfig dataXConfig = DataXConfig.builder()
+                .id(id)
+                .runstate(runstate)
+                .modifyTime(new Date())
+                .build();
+
+        if (dataXConfigMapper.updateByExampleSelective(dataXConfig,
+                DataXConfigExample.newAndCreateCriteria()
+                        .andIdEqualTo(id)
+                        .example(), DataXConfig.Column.runstate, DataXConfig.Column.modifyTime) > 0) {
+            flag = true;
+        } else {
+            throw new CustomException("Data Update Failure", HttpCode.CODE_500);
+        }
+        return flag;
+    }
+
+    /**
+     * 判断任务ContextId是否执行 ，true : 可以执行
+     * (推送端)
+     */
+    @Override
+    public Boolean pushCheckDataXConfigById(String id) {
+        Boolean flag = false;
+
+        if (!StringUtils.isEmpty(id)) {
+
+            List<Integer> list = new ArrayList<Integer>();
+            list.add(DataXConfig.Runstate.FAIL.getValue());
+            list.add(DataXConfig.Runstate.UNOPENED.getValue());
+
+            Optional<DataXConfig> dataXConfigOptional = null;
+            try {
+                dataXConfigOptional = Optional.ofNullable(
+                        dataXConfigMapper.selectOneByExample(
+                                DataXConfigExample.newAndCreateCriteria()
+                                        .andIdEqualTo(id)
+                                        .andRunstateIn(list)
+                                        .example()));
+
+                if (dataXConfigOptional.isPresent()) {
+                    flag = true;
+                } else {
+                    flag = false;
+                }
+            } catch (Exception e) {
+                log.error("Data Query Failure >>> [{}]", JSON.toJSONString(e.getMessage()));
+                throw new CustomException("Data Query Failure", HttpCode.CODE_500);
+            }
+        } else {
+            throw new CustomException("Parametric anomaly ", HttpCode.CODE_400);
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean receiveCheckDataXConfigById(DataxConfigVo dataxConfigVo) {
+        Boolean flag = false;
+
+        Optional<DataXConfig> dataXConfigOptional = null;
+        try {
+            dataXConfigOptional = Optional.ofNullable(
+                    dataXConfigMapper.selectOneByExample(
+                            DataXConfigExample.newAndCreateCriteria()
+                                    .andIdEqualTo(dataxConfigVo.getId())
+                                    .andRunstateEqualTo(dataxConfigVo.getRunstate())
+                                    .example()));
+        } catch (Exception e) {
+            log.error("Data Query Failure >>> [{}]", JSON.toJSONString(e.getMessage()));
+            throw new CustomException("Data Query Failure", HttpCode.CODE_500);
+        }
+
+        if (dataXConfigOptional.isPresent()) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
+    private Map<String, Object> startDataXComm(DataXConfig dataXConfig, String urlSuffix, Integer runstate) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        StringBuffer url = new StringBuffer();
+        //生成请求flume监控端口的url
+        url.append("http://").append(dataXConfig.getServerIp()).append(":").append(dataXConfig.getServerPort())
+                .append(urlSuffix);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("id", dataXConfig.getId());
+
+        //修改状态为：开始推送
+        dataXConfig.setRunstate(runstate);
+        dataXConfig.setModifyTime(new Date());
+
+        if (dataXConfigMapper.updateByExampleSelective(dataXConfig,
+                DataXConfigExample.newAndCreateCriteria()
+                        .andIdEqualTo(dataXConfig.getId())
+                        .example(), DataXConfig.Column.runstate, DataXConfig.Column.modifyTime) > 0) {
+            //发送远程请求
+            synchronized (this) {
+                map = CommHttpReq.agentRequest(url.toString(), params);
+            }
+        } else {
+            throw new CustomException("Data Update Failure", HttpCode.CODE_500);
+        }
+        return map;
+    }
+
+    @Override
+    public Boolean updateDataXConfigByProcesspidAndRunstateAndId(DataxConfigVo dataxConfigVo) {
+        Boolean flag = false;
+
+        DataXConfig dataXConfig = DataXConfig.builder()
+                .id(dataxConfigVo.getId())
+                .processPid(dataxConfigVo.getProcessPid())
+                .runstate(dataxConfigVo.getRunstate())
+                .startupTime(dataxConfigVo.getStartupTime())
+                .modifyTime(new Date())
+                .build();
+
+        if (dataXConfig != null) {
+            if (dataXConfigMapper.updateByExampleSelective(dataXConfig,
+                    DataXConfigExample.newAndCreateCriteria()
+                            .andIdEqualTo(dataXConfig.getId()).example(),
+                    DataXConfig.Column.processPid,
+                    DataXConfig.Column.runstate,
+                    DataXConfig.Column.modifyTime,
+                    DataXConfig.Column.startupTime) > 0) {
+                flag = true;
+            } else {
+                throw new CustomException("Failed to modify to data", HttpCode.CODE_400);
+            }
+        } else {
+            throw new CustomException("Data does not exist", HttpCode.CODE_400);
+        }
+        return flag;
+    }
+
+    @Override
+    public Map<String, Object> startDataX(String data) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String id = data;
+        try {
+            if (!StringUtils.isEmpty(id)) {
+                if (this.pushCheckDataXConfigById(id)) {
+                    DataXConfig dataXConfig = this.selectOnedataXConfig(id);
+                    if (dataXConfig != null) {
+                        String urlSuffix = "/agent/startDataX";
+                        map = this.startDataXComm(dataXConfig, urlSuffix, DataXConfig.Runstate.PUSHING.getValue());
+                    } else {
+                        throw new CustomException("未查询到ID:" + id + "的任务!!", HttpCode.CODE_400);
+                    }
+                } else {
+                    throw new CustomException("状态不符开启要求，请刷新页面！");
+                }
+            } else {
+                throw new CustomException("Parametric anomaly ", HttpCode.CODE_400);
+            }
+        } catch (Exception e) {
+            this.updateDataXConfigByIdAndRunstate(id, DataXConfig.Runstate.FAIL.getValue());
+            e.printStackTrace();
+            log.error("Start Failure >>> [{}]", JSON.toJSONString(e.getMessage()));
+            throw new CustomException(e.getMessage(), HttpCode.CODE_500);
+        }
+        return map;
+    }
+
+    @Override
+    public DataxConfigBo queryPartialFieldsDataXConfigById(DataxConfigVo dataxConfigVo) {
+        DataxConfigBo dataxConfigBo = new DataxConfigBo();
+
+        DataXConfig dataXConfig = this.selectOnedataXConfig(dataxConfigVo.getId());
+
+        if (dataXConfig != null) {
+            dataxConfigBo = DataxConfigBo.builder()
+                    .id(dataXConfig.getId())
+                    .name(dataXConfig.getName())
+                    .code(dataXConfig.getCode())
+                    .processPid(dataXConfig.getProcessPid())
+                    .pythonscriptFileName(dataXConfig.getPythonscriptFileName())
+                    .serverPort(dataXConfig.getServerPort())
+                    .jsonFileName(dataXConfig.getJsonFileName())
+                    .dataxHome(dataXConfig.getDataxHome())
+                    .serverIp(dataXConfig.getServerIp())
+                    .runstate(dataXConfig.getRunstate())
+                    .jsonSwitch(dataXConfig.getJsonSwitch())
+                    .pythonSwitch(dataXConfig.getPythonSwitch())
+                    .build();
+        } else {
+            throw new CustomException("Data does not exist", HttpCode.CODE_400);
+        }
+        return dataxConfigBo;
+    }
+
+    @Override
+    public List<DataxConfigBo> queryDataXConfigByServerIpAndRunstate(DataxConfigVo dataxConfigVo) {
+        List<DataxConfigBo> dataxConfigBoArrayList = new ArrayList<DataxConfigBo>();
+
+        Optional<List<DataXConfig>> optionalDataXConfigList = null;
+        try {
+            optionalDataXConfigList = Optional.ofNullable(
+                    dataXConfigMapper.selectByExample(
+                            DataXConfigExample.newAndCreateCriteria()
+                                    .andServerIpEqualTo(dataxConfigVo.getServerIp())
+                                    .andRunstateEqualTo(dataxConfigVo.getRunstate())
+                                    .example()
+                    ));
+
+            if (optionalDataXConfigList.isPresent()) {
+                List<DataXConfig> dataXConfigs = optionalDataXConfigList.get();
+                dataXConfigs.forEach(dataXConfig -> {
+                    DataxConfigBo dataxConfigBo = DataxConfigBo.builder()
+                            .id(dataXConfig.getId())
+                            .name(dataXConfig.getName())
+                            .code(dataXConfig.getCode())
+                            .processPid(dataXConfig.getProcessPid())
+                            .pythonscriptFileName(dataXConfig.getPythonscriptFileName())
+                            .serverPort(dataXConfig.getServerPort())
+                            .jsonFileName(dataXConfig.getJsonFileName())
+                            .dataxHome(dataXConfig.getDataxHome())
+                            .serverIp(dataXConfig.getServerIp())
+                            .runstate(dataXConfig.getRunstate())
+                            .jsonSwitch(dataXConfig.getJsonSwitch())
+                            .pythonSwitch(dataXConfig.getPythonSwitch())
+                            .build();
+                    dataxConfigBoArrayList.add(dataxConfigBo);
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Data Query Failure >>> [{}]", JSON.toJSONString(e.getMessage()));
+            throw new CustomException("Data Query Failure");
+        }
+        return dataxConfigBoArrayList;
+    }
+
+    @Override
+    public Map<String, Object> restartDataX(String data) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String id = data;
+        try {
+            if (!StringUtils.isEmpty(id)) {
+                DataXConfig dataXConfig = this.selectOnedataXConfig(id);
+                if (dataXConfig != null) {
+                    String urlSuffix = "/agent/restartDataX";
+                    map = this.startDataXComm(dataXConfig, urlSuffix, DataXConfig.Runstate.RESTART.getValue());
+                } else {
+                    throw new CustomException("未查询到ID:" + id + "的任务!!", HttpCode.CODE_400);
+                }
+            } else {
+                throw new CustomException("Parametric anomaly ", HttpCode.CODE_400);
+            }
+        } catch (Exception e) {
+            this.updateDataXConfigByIdAndRunstate(id, DataXConfig.Runstate.FAIL.getValue());
+            e.printStackTrace();
+            log.error("Start Failure >>> [{}]", JSON.toJSONString(e.getMessage()));
+            throw new CustomException(e.getMessage(), HttpCode.CODE_500);
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> stopDataX(String data) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String id = data;
+        try {
+            if (!StringUtils.isEmpty(id)) {
+                DataXConfig dataXConfig = this.selectOnedataXConfig(id);
+
+                if (dataXConfig != null) {
+                    synchronized (this) {
+                        if (DataXConfig.Runstate.RUNING.getValue().equals(dataXConfig.getRunstate())) {
+                            StringBuffer url = new StringBuffer();
+                            //生成请求flume监控端口的url
+                            url.append("http://").append(dataXConfig.getServerIp()).append(":").append(dataXConfig.getServerPort())
+                                    .append("/agent/stopDataX");
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("contextId", String.valueOf(dataXConfig.getId()));
+
+                            //发送远程请求
+                            map = CommHttpReq.agentRequest(url.toString(), params);
+                        } else {
+                            throw new CustomException("状态不符关闭要求，请刷新页面！");
+                        }
+                    }
+                } else {
+                    throw new CustomException("未查询到ID:" + id + "的任务!!", HttpCode.CODE_400);
+                }
+            } else {
+                throw new CustomException("Parametric anomaly ", HttpCode.CODE_400);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Start Failure >>> [{}]", JSON.toJSONString(e.getMessage()));
+            throw new CustomException(e.getMessage(), HttpCode.CODE_500);
+        }
+        return map;
+    }
+
+
 }

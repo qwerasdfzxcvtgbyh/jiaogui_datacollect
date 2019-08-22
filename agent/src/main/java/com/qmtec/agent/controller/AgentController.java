@@ -84,4 +84,67 @@ public class AgentController {
         return resultModel;
     }
 
+    /**
+     * 启动DataX
+     *
+     * @return
+     */
+    @RequestMapping("/startDataX")
+    public ResultModel<Boolean> startDataX(String id) {
+
+        ResultModel<Boolean> resultModel = new ResultModel<>();
+        Boolean res = agentService.startDataX(id,new HashMap<>());//map存放固定值
+        resultModel.setData(res);
+        if (res) {
+            resultModel.setMessage("启动成功");
+            return resultModel;
+        }
+        resultModel.setCode(HttpCode.CODE_500.toValue());
+        resultModel.setMessage("启动失败");
+
+        return resultModel;
+    }
+
+    /**
+     * 停止DataX
+     *
+     * @return
+     */
+    @RequestMapping("/stopDataX")
+    public ResultModel<Boolean> stopDataX(String id) {
+
+        ResultModel<Boolean> resultModel = new ResultModel<>();
+        Boolean res = agentService.stopDataX(id,new HashMap<>());//map存放固定值
+        resultModel.setData(res);
+        if (res) {
+            resultModel.setMessage("进程停止成功");
+            return resultModel;
+        }
+        resultModel.setCode(HttpCode.CODE_500.toValue());
+        resultModel.setMessage("进程停止失败");
+
+        return resultModel;
+    }
+
+    /**
+     * 重启DataX
+     *
+     * @return
+     */
+    @RequestMapping("/restartDataX")
+    public ResultModel<Boolean> restartDataX(String id) {
+
+        ResultModel<Boolean> resultModel = new ResultModel<>();
+        Boolean res = agentService.restartDataX(id,new HashMap<>());//map存放固定值
+        resultModel.setData(res);
+        if (res) {
+            resultModel.setMessage("启动成功");
+            return resultModel;
+        }
+        resultModel.setCode(HttpCode.CODE_500.toValue());
+        resultModel.setMessage("启动失败");
+
+        return resultModel;
+    }
+
 }

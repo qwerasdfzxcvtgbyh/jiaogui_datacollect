@@ -251,5 +251,19 @@ public class ExecuteCmdUtil {
         return flag;
     }
 
+
+    public static boolean isExistDataXProccessId(Integer pid, String pythonscriptFileName, String jsonFileName)throws Exception {
+        boolean flag = false;
+        String cmd = "ps -ef |grep " + jsonFileName + "|grep " + pythonscriptFileName + "|grep " + pid + "|grep -v grep|cut -c 9-15";
+        String pc_id = ExecuteCmdUtil.getProccessId(new String[]{"/bin/bash", "-c", cmd});  //获取进程id
+        if (!StringUtils.isEmpty(pc_id)) {
+            if(pid.toString().equals(pc_id)){
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
+
 }
 

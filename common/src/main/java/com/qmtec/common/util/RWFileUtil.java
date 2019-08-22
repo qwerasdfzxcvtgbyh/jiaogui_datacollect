@@ -53,6 +53,11 @@ public class RWFileUtil {
         out.close();
     }
 
+    public static boolean isExistFile(String filePath) {
+        File file = new File(filePath);
+        return file.exists();
+    }
+
     /**
      * 创建目录,如果目录不存在
      *

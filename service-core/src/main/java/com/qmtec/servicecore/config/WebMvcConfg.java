@@ -31,5 +31,6 @@ public class WebMvcConfg implements WebMvcConfigurer {
         addInterceptor.excludePathPatterns("/js/**");
         addInterceptor.excludePathPatterns("/lib/**");
         addInterceptor.excludePathPatterns("/flumeConfig/**");
+        addInterceptor.excludePathPatterns("/DataXConfig/**");
     }
 }

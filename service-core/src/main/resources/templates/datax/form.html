@@ -23,7 +23,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">任务名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="请输入任务名"
+                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="例：DataX_Test"
                            class="layui-input" th:field="*{name}">
                 </div>
             </div>
@@ -31,8 +31,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">任务编码</label>
                 <div class="layui-input-block">
-                    <input type="text" name="code" lay-verify="required" lay-reqtext="任务编码是必填项，岂能为空？" placeholder="请输入"
-                           autocomplete="off" class="layui-input" th:field="*{code}">
+                    <input type="text" name="code" lay-verify="required" lay-reqtext="任务编码是必填项，岂能为空？"
+                           placeholder="例：Data0001" autocomplete="off" class="layui-input" th:field="*{code}">
                 </div>
             </div>
 
@@ -40,7 +40,7 @@
                 <label class="layui-form-label">服务器IP</label>
                 <div class="layui-input-block">
                     <input type="text" name="serverIp" lay-verify="serverIP" lay-reqtext="服务器IP是必填项，岂能为空？"
-                           placeholder="请输入" autocomplete="off" class="layui-input" th:field="*{serverIp}">
+                           placeholder="例：192.168.0.1" autocomplete="off" class="layui-input" th:field="*{serverIp}">
                 </div>
             </div>
 
@@ -48,14 +48,22 @@
                 <label class="layui-form-label">服务器PORT</label>
                 <div class="layui-input-block">
                     <input type="text" name="serverPort" lay-verify="serverPort" lay-reqtext="服务器PORT是必填项，岂能为空？"
-                           placeholder="请输入" autocomplete="off" class="layui-input" th:field="*{serverPort}">
+                           placeholder="例：10060" autocomplete="off" class="layui-input" th:field="*{serverPort}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">DataX根目录</label>
+                <div class="layui-input-block">
+                    <input type="text" name="dataxHome" lay-verify="required" lay-reqtext="DataX根目录是必填项，岂能为空？"
+                           placeholder="例：/root/datax" autocomplete="off" class="layui-input" th:field="*{dataxHome}">
                 </div>
             </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">备注</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="remark" th:field="*{remark}"></textarea>
+                    <textarea placeholder="例：备注" class="layui-textarea" name="remark" th:field="*{remark}"></textarea>
                 </div>
             </div>
 
@@ -64,41 +72,36 @@
             </fieldset>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">脚本路径</label>
-                <div class="layui-input-block">
-                    <input type="text" name="pythonscriptPath" lay-verify="required" lay-reqtext="python脚本路径是必填项，岂能为空？"
-                           placeholder="请输入" autocomplete="off" class="layui-input" th:field="*{pythonscriptPath}">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
                 <label class="layui-form-label">脚本文件名</label>
                 <div class="layui-input-block">
                     <input type="text" name="pythonscriptFileName" lay-verify="required"
                            lay-reqtext="python脚本文件名是必填项，岂能为空？"
-                           placeholder="请输入" autocomplete="off" class="layui-input" th:field="*{pythonscriptFileName}">
+                           placeholder="例：data_py (如果是服务器上存在文件名,需关闭脚本开关以免造成覆盖.)" autocomplete="off" class="layui-input"
+                           th:field="*{pythonscriptFileName}">
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">脚本模板</label>
+                <label class="layui-form-label">脚本开关</label>
                 <div class="layui-input-block">
-                    <select name="python_template" lay-filter="python_template">
-                        <option value=""></option>
-
-                        <option th:each="fileTemplate : ${PythonFileTemplates}" th:value="${fileTemplate.id}"
-                                th:text="${fileTemplate.name }">
-
-                    </select>
+                    <input id="py_input_switch" type="checkbox" name="pythonSwitch" lay-skin="switch"
+                           lay-filter="switchPython" lay-text="ON|OFF">
                 </div>
             </div>
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">脚本内容</label>
+            <div class="layui-form-item layui-form" style="display: none" id="pySwitch" lay-filter="py_div">
+                <label class="layui-form-label">脚本模板</label>
                 <div class="layui-input-block">
+                    <select name="python_template" lay-filter="python_template"
+                            id="python_template">
+                        <option value="" name="提供模板选择,内容需自行修改"></option>
+                        <option th:each="fileTemplate : ${PythonFileTemplates}" th:value="${fileTemplate.id}"
+                                th:text="${fileTemplate.name }">
+                    </select>
+
                     <textarea placeholder="请输入内容" class="layui-textarea" name="pythonscriptContent"
                               id="pythonscriptContent"
-                              lay-verify="required" style="height: 200px" th:field="*{pythonscriptContent}"></textarea>
+                              style="height: 200px" th:field="*{pythonscriptContent}"></textarea>
                 </div>
             </div>
 
@@ -107,42 +110,34 @@
             </fieldset>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">文件路径</label>
-                <div class="layui-input-block">
-                    <input type="text" name="jsonFilePath" lay-verify="required" lay-reqtext="Json文件路径是必填项，岂能为空？"
-                           placeholder="请输入" autocomplete="off" class="layui-input" th:field="*{jsonFilePath}">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
                 <label class="layui-form-label">文件名</label>
                 <div class="layui-input-block">
                     <input type="text" name="jsonFileName" lay-verify="required" lay-reqtext="Json文件名是必填项，岂能为空？"
-                           placeholder="请输入" autocomplete="off" class="layui-input" th:field="*{jsonFileName}">
+                           placeholder="例：data_json (如果是服务器上存在文件名,需关闭内容开关以免造成覆盖.)"
+                           autocomplete="off" class="layui-input" th:field="*{jsonFileName}">
                 </div>
             </div>
 
             <div class="layui-form-item">
+                <label class="layui-form-label">内容开关</label>
+                <div class="layui-input-block">
+                    <input id="json_input_switch" type="checkbox" name="jsonSwitch" lay-skin="switch"
+                           lay-filter="switchJson" lay-text="ON|OFF">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form " style="display: none" id="jsonSwitch" lay-filter="json_div">
                 <label class="layui-form-label">文件模板</label>
                 <div class="layui-input-block">
-                    <select name="json_template" lay-filter="json_template">
+                    <select name="json_template" lay-filter="json_template" id="json_template">
                         <option value=""></option>
-
                         <option th:each="fileTemplate : ${JsonFileTemplates}" th:value="${fileTemplate.id}"
                                 th:text="${fileTemplate.name }">
-
                     </select>
-                </div>
-            </div>
-
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">文件内容</label>
-                <div class="layui-input-block">
                     <textarea placeholder="请输入内容" class="layui-textarea" name="jsonFileContent" id="jsonFileContent"
-                              lay-verify="required" style="height: 200px" th:field="*{jsonFileContent}"></textarea>
+                              style="height: 200px" th:field="*{jsonFileContent}"></textarea>
                 </div>
             </div>
-
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
@@ -168,18 +163,33 @@
         $("input[name='code']").attr("readOnly", "true");
         $("input[name='code']").css("color", "gray");
     }
+
+    var py_switch = false;
+    var json_switvh = false;
+
+    var dataxConfig = [[${dataxConfig}]];
+    if (dataxConfig != null) {
+        var j = dataxConfig.jsonSwitch == null ? false : dataxConfig.jsonSwitch;
+        var p = dataxConfig.pythonSwitch == null ? false : dataxConfig.pythonSwitch;
+        $("#json_input_switch").attr("checked", j);
+        $("#py_input_switch").attr("checked", p);
+
+        if(j){
+            json_switvh = j;
+            $("#jsonSwitch").css("display", "block");
+        }
+        if(p){
+            py_switch = p;
+            $("#pySwitch").css("display", "block");
+        }
+    }
 </script>
 
-
 <script>
-    layui.use(['form', 'layedit', 'laydate'], function () {
-        var form = layui.form
-            , layer = layui.layer
-            , layedit = layui.layedit
-            , laydate = layui.laydate;
 
-        //创建一个编辑器
-        // var editIndex = layedit.build('LAY_demo_editor');
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form,
+            layer = layui.layer;
 
         //自定义验证规则
         form.verify({
@@ -197,7 +207,7 @@
         //监听文件模板选择
         form.on('select(python_template)', function (data) {
             var file_template_id = data.value;
-            if(file_template_id != null && file_template_id != ""){
+            if (file_template_id != "" && file_template_id != null) {
                 $.ajax({
                     //请求方式
                     type: "POST",
@@ -227,7 +237,7 @@
         form.on('select(json_template)', function (data) {
             var file_template_id = data.value;
 
-            if(file_template_id != null && file_template_id != ""){
+            if (file_template_id != "" && file_template_id != null) {
                 $.ajax({
                     //请求方式
                     type: "POST",
@@ -252,51 +262,87 @@
                     }
                 });
             }
+        });
 
+        //监听指定开关
+        form.on('switch(switchPython)', function (data) {
+            if (this.checked) {
+                $("#pySwitch").css("display", "block");
+            } else {
+                $("#pySwitch").css("display", "none");
+                $("#pythonscriptContent").val("");
+                $("#python_template").val(""); //清空原选项值
+                layui.form.render('select', 'py_div');
+            }
+            py_switch = this.checked;
+        });
+
+        form.on('switch(switchJson)', function (data) {
+            if (this.checked) {
+                $("#jsonSwitch").css("display", "block");
+            } else {
+                $("#jsonSwitch").css("display", "none");
+                $("#jsonFileContent").val("");
+                $("#json_template").val(""); //清空原选项值
+                layui.form.render('select', 'json_div');
+            }
+            json_switvh = this.checked;
         });
 
         //监听提交
         form.on('submit(demo1)', function (data) {
-            var pythonscriptContent = $("#pythonscriptContent").val();
-            if (pythonscriptContent != null && pythonscriptContent != "") {
-                var jsonFileContent = $("#jsonFileContent").val();
-                if (jsonFileContent != null && jsonFileContent != "") {
-                    $.ajax({
-                        //请求方式
-                        type: "POST",
-                        //请求的媒体类型
-                        contentType: "application/json;charset=UTF-8",
-                        //请求地址
-                        url: "/DataxConfigView/addOrUpdateDataxConfig",
-                        //数据，json字符串
-                        data: JSON.stringify(data.field),
-                        //dataType: 'json',
-                        //请求成功
-                        success: function (result) {
-                            if (result.code == 200 && result.data == true) {
-                                var index = parent.layer.getFrameIndex(window.name);
-                                parent.layer.close(index);
-                                parent.layui.table.reload('currentTableId');//重载父页表格，参数为表格ID
-                                parent.layer.msg(result.message, {icon: 6, time: 1000});
-                            } else {
-                                layer.msg("异常信息：" + result.message, {icon: 5});
-                            }
-                        },
-                        //请求失败，包含具体的错误信息
-                        error: function (e) {
-                            layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
-                        }
-                    });
-                } else {
-                    layer.msg('Json文件内容不能为空！', {anim: 6, icon: 5});
+
+            if (py_switch) {
+                var pythonscriptContent = $("#pythonscriptContent").val();
+                if (pythonscriptContent == "") {
+                    layer.msg('Python脚本内容不能为空！', {anim: 6, icon: 5});
+                    return false;
                 }
-            } else {
-                layer.msg('Python脚本内容不能为空！', {anim: 6, icon: 5});
             }
+
+            if (json_switvh) {
+                var jsonFileContent = $("#jsonFileContent").val();
+                if (jsonFileContent == "") {
+                    layer.msg('Json文件内容不能为空！', {anim: 6, icon: 5});
+                    return false;
+                }
+            }
+
+            data.field.pythonSwitch = py_switch;
+            data.field.jsonSwitch = json_switvh;
+            console.log(data)
+            $.ajax({
+                //请求方式
+                type: "POST",
+                //请求的媒体类型
+                contentType: "application/json;charset=UTF-8",
+                //请求地址
+                url: "/DataXConfigView/addOrUpdateDataxConfig",
+                //数据，json字符串
+                data: JSON.stringify(data.field),
+                //dataType: 'json',
+                //请求成功
+                success: function (result) {
+                    if (result.code == 200 && result.data == true) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        parent.layui.table.reload('currentTableId');//重载父页表格，参数为表格ID
+                        parent.layer.msg(result.message, {icon: 6, time: 1000});
+                    } else {
+                        layer.msg("异常信息：" + result.message, {icon: 5});
+                    }
+                },
+                //请求失败，包含具体的错误信息
+                error: function (e) {
+                    layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
+                }
+            });
             return false;
         });
 
+
     });
+
 </script>
 
 </body>

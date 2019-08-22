@@ -187,10 +187,14 @@ public class HiveMateServiceImpl implements HiveMateService {
                     .fieldsCount(fieldsCount)
                     .isCompress(tableParmasMap.containsKey("orc.compress"))
                     .compressFormat((tableParmasMap.get("orc.compress") == null ? "无" : (String) tableParmasMap.get("orc.compress")))
-                    .lastUpdateTime(df.format(CommonUtil.convertHiveDateTime(Integer.parseInt(tableParmasMap.get("transient_lastDdlTime").toString()))))
                     .comment((tableParmasMap.get("comment") == null ? "" : (String) tableParmasMap.get("comment")))
                     .fieldDelimiter(fieldDelimiter)
                     .build();
+
+            if(null != tableParmasMap.get("transient_lastDdlTime")){
+                tableBaseInfo.setLastUpdateTime(df.format(CommonUtil.convertHiveDateTime(Integer.parseInt(tableParmasMap.get("transient_lastDdlTime").toString()))));
+            }
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
             throw new CustomException("查询失败", HttpCode.CODE_500);
@@ -428,56 +432,57 @@ public class HiveMateServiceImpl implements HiveMateService {
 
                     //分区指定的key 字段
                     List<TbPartitionKeys> tbPartitionKeysList = tbPartitionKeysOptional.get();
+
                     String name = "";
                     if (tbPartitionKeysList.size() > 0) {
                         for (TbPartitionKeys tbPartitionKeys : tbPartitionKeysList) {
                             name = name  + tbPartitionKeys.getPkeyName() + "|";
                         }
-                    }
-                    name = name.substring(0,name.lastIndexOf("|"));
+                        name = name.substring(0,name.lastIndexOf("|"));
 
-                    //开始组装： 父级
-                    TablePartitionInfoDto tablePartitionInfoDto = TablePartitionInfoDto.builder().build();
-                    tablePartitionInfoDto.setAuthorityId(tbTBLS.getTblId());
+                        //开始组装： 父级
+                        TablePartitionInfoDto tablePartitionInfoDto = TablePartitionInfoDto.builder().build();
+                        tablePartitionInfoDto.setAuthorityId(tbTBLS.getTblId());
 
-                    TbSDS tbSDS = tbSDSMapper.selectOneByExample(TbSDSExample.newAndCreateCriteria()
-                            .andSdIdEqualTo(tbTBLS.getSdId())
-                            .example());
-
-                    tablePartitionInfoDto.setAuthorityName(name);
-                    tablePartitionInfoDto.setCreateTime(df.format(CommonUtil.convertHiveDateTime(tbTBLS.getCreateTime())));
-                    tablePartitionInfoDto.setParentId(-1L);
-                    tablePartitionInfoDto.setMenuUrl(tbSDS.getLocation());
-                    tablePartitionInfoDto.setChecked("0");
-
-                    //添加父级
-                    tablePartitionInfoDtoList.add(tablePartitionInfoDto);
-
-                    //查询所以子集
-                    List<TbPartitions> tbPartitionsList = tbPartitionsMapper.selectByExample(TbPartitionsExample.newAndCreateCriteria()
-                            .andTblIdEqualTo(tbTBLS.getTblId())
-                            .example());
-
-                    tbPartitionsList.forEach(tbPartitions -> {
-
-                        TbSDS tbSDS1 = tbSDSMapper.selectOneByExample(TbSDSExample.newAndCreateCriteria()
-                                .andSdIdEqualTo(tbPartitions.getSdId())
+                        TbSDS tbSDS = tbSDSMapper.selectOneByExample(TbSDSExample.newAndCreateCriteria()
+                                .andSdIdEqualTo(tbTBLS.getSdId())
                                 .example());
 
-                        TablePartitionInfoDto tablePartitionInfoDto1 = TablePartitionInfoDto.builder()
-                                .authorityId(tbPartitions.getPartId())
-                                .authorityName(tbPartitions.getPartName())
-                                .parentId(tbTBLS.getTblId())
-                                .checked("0")
-                                .createTime(df.format(CommonUtil.convertHiveDateTime(tbPartitions.getCreateTime())))
-                                .menuUrl(tbSDS1.getLocation())
-                                .build();
+                        tablePartitionInfoDto.setAuthorityName(name);
+                        tablePartitionInfoDto.setCreateTime(df.format(CommonUtil.convertHiveDateTime(tbTBLS.getCreateTime())));
+                        tablePartitionInfoDto.setParentId(-1L);
+                        tablePartitionInfoDto.setMenuUrl(tbSDS.getLocation());
+                        tablePartitionInfoDto.setChecked("0");
 
-                        tablePartitionInfoDtoList.add(tablePartitionInfoDto1);
-                    });
+                        //添加父级
+                        tablePartitionInfoDtoList.add(tablePartitionInfoDto);
 
-                    //所有总数
-                    size = size + tbPartitionKeysList.size() + tbPartitionsList.size();
+                        //查询所以子集
+                        List<TbPartitions> tbPartitionsList = tbPartitionsMapper.selectByExample(TbPartitionsExample.newAndCreateCriteria()
+                                .andTblIdEqualTo(tbTBLS.getTblId())
+                                .example());
+
+                        tbPartitionsList.forEach(tbPartitions -> {
+
+                            TbSDS tbSDS1 = tbSDSMapper.selectOneByExample(TbSDSExample.newAndCreateCriteria()
+                                    .andSdIdEqualTo(tbPartitions.getSdId())
+                                    .example());
+
+                            TablePartitionInfoDto tablePartitionInfoDto1 = TablePartitionInfoDto.builder()
+                                    .authorityId(tbPartitions.getPartId())
+                                    .authorityName(tbPartitions.getPartName())
+                                    .parentId(tbTBLS.getTblId())
+                                    .checked("0")
+                                    .createTime(df.format(CommonUtil.convertHiveDateTime(tbPartitions.getCreateTime())))
+                                    .menuUrl(tbSDS1.getLocation())
+                                    .build();
+
+                            tablePartitionInfoDtoList.add(tablePartitionInfoDto1);
+                        });
+
+                        //所有总数
+                        size = size + tbPartitionKeysList.size() + tbPartitionsList.size();
+                    }
                 }
             }
             listResult.setTotal(Long.valueOf(String.valueOf(size)));

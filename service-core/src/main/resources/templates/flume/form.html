@@ -77,19 +77,6 @@
                 </div>
             </div>
 
-            <!--<div class="layui-form-item">
-                <label class="layui-form-label">文件模板</label>
-                <div class="layui-input-block">
-                    <select name="interest"  lay-filter="file_template">
-                        <option value=""></option>
-
-                        <option th:each="fileTemplate : ${fileTemplates}" th:value="${fileTemplate.id}"
-                                th:text="${fileTemplate.name }">
-
-                    </select>
-                </div>
-            </div>-->
-
             <div class="layui-form-item">
                 <label class="layui-form-label">模板类型</label>
                 <div class="layui-input-block">
@@ -163,9 +150,6 @@
             , layer = layui.layer
             , layedit = layui.layedit
             , laydate = layui.laydate;
-
-        //创建一个编辑器
-        // var editIndex = layedit.build('LAY_demo_editor');
 
         //自定义验证规则
         form.verify({
@@ -248,19 +232,6 @@
             }
             return false;
         });
-
-        //表单初始赋值
-        /*form.val('example', {
-            "username": "贤心" // "name": "value"
-            , "password": "123456"
-            , "interest": 1
-            , "like[write]": true //复选框选中状态
-            , "close": true //开关状态
-            , "sex": "女"
-            , "desc": "我爱 layui"
-        })*/
-
-
     });
 </script>
 

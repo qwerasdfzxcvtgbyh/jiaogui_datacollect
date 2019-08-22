@@ -9,6 +9,7 @@ import com.qmtec.common.util.HttpClientResult;
 import com.qmtec.common.util.HttpClientUtil;
 import com.qmtec.common.util.OrderContextIdFactory;
 import com.qmtec.common.web.HttpCode;
+import com.qmtec.servicecore.comm.CommHttpReq;
 import com.qmtec.servicecore.dao.FlumeConfigMapper;
 import com.qmtec.servicecore.entity.FlumeConfig;
 import com.qmtec.servicecore.entity.example.FlumeConfigExample;
@@ -223,7 +224,6 @@ public class FlumeConfigServiceImpl implements FlumeConfigService {
         } else {
             throw new CustomException("Data does not exist", HttpCode.CODE_400);
         }
-
         return flumeConfig;
     }
 
@@ -816,7 +816,7 @@ public class FlumeConfigServiceImpl implements FlumeConfigService {
                         .example(), FlumeConfig.Column.runstate, FlumeConfig.Column.modifyTime) > 0) {
             //发送远程请求
             synchronized (this) {
-                map = this.flumerRequest(url.toString(), params);
+                map = CommHttpReq.agentRequest(url.toString(), params);
             }
         } else {
             throw new CustomException("Data Update Failure", HttpCode.CODE_500);
@@ -853,21 +853,6 @@ public class FlumeConfigServiceImpl implements FlumeConfigService {
         return map;
     }
 
-    private Map<String, Object> flumerRequest(String url, Map<String, String> params) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            HttpClientResult httpClientResult = HttpClientUtil.doPost(url, params);
-            String content = httpClientResult.getContent();
-            JSONObject jsonObject = JSON.parseObject(content);
-            map.put("code", jsonObject.get("code"));
-            map.put("data", jsonObject.get("data"));
-            map.put("message", jsonObject.get("message"));
-        } catch (Exception e) {
-            throw new Exception("Failed to send remote request");
-        }
-        return map;
-    }
-
     /**
      * 停止flume
      */
@@ -893,7 +878,7 @@ public class FlumeConfigServiceImpl implements FlumeConfigService {
                             params.put("contextId", String.valueOf(flumeConfig.getContextId().longValue()));
 
                             //发送远程请求
-                            map = this.flumerRequest(url.toString(), params);
+                            map = CommHttpReq.agentRequest(url.toString(), params);
                             if (HttpCode.CODE_200.toValue() == (int) map.get("code")) {
                                 //修改监控内容“关闭”（如果之前被修改成“端口异常”，那这里也就修改不到）
                                 flumeMonitorService.updateMonitorInfoToClose(contextId);

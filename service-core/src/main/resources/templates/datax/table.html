@@ -19,12 +19,7 @@
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
-                        <!--<div class="layui-inline">
-                            <label class="layui-form-label">任务ID</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="id" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>-->
+
                         <div class="layui-inline">
                             <label class="layui-form-label">任务名称</label>
                             <div class="layui-input-inline">
@@ -61,17 +56,16 @@
 
         <script type="text/html" id="currentTableBar">
             <!-- 这里同样支持 laytpl 语法，如： -->
-            <!--{{#  if( d.runstate == 2 ||  d.runstate == 8 ){ }}
-            <a class="layui-btn layui-btn-xs" lay-event="startFlume">可开启</a>
+            {{#  if( d.runstate == 2 ||  d.runstate == 8 ){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="startDataX">可开启</a>
             {{#  }else if(d.runstate == 1){ }}
-            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="stopFlume">可关闭</a>
-            <a class="layui-btn layui-btn-xs" lay-event="restartFlume">重启</a>
-            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="viewRunInfor">查看运行信息</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="stopDataX">可关闭</a>
+            <a class="layui-btn layui-btn-xs" lay-event="restartDataX">重启</a>
             {{#  }else if(d.runstate == 13 ){ }}
-            <a class="layui-btn layui-btn-xs" lay-event="restartFlume">重启</a>
+            <a class="layui-btn layui-btn-xs" lay-event="restartDataX">重启</a>
             {{#  }else{ }}
-            <a class="layui-btn layui-btn-disabled"> 开启中 </a>
-            {{#  }}}-->
+            <a class="layui-btn layui-btn-xs layui-btn-disabled"> 开启中 </a>
+            {{#  }}}
         </script>
 
         <script type="text/html" id="baseTableBar">
@@ -85,6 +79,7 @@
 
 <script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
 <script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+<script src="/comment/comment.js"></script>
 
 <script>
     layui.use(['form', 'table'], function () {
@@ -96,32 +91,26 @@
         table.render({
             id: "currentTableId",
             elem: '#currentTableId',
-            url: '/DataxConfigView/listSelectDataxConfig',
+            url: '/DataXConfigView/listSelectDataxConfig',
             method: 'post',
             cols: [
                 [
                     {type: "checkbox", width: 50, fixed: "left"}
                     // , {field: 'id', title: '任务ID', width: 170, fixed: 'left', unresize: true}
                     , {field: 'name', title: '任务名称', width: 140}
-                    , {field: 'code', title: '任务编码', width: 90}
-
-                    , {field: 'jsonFilePath', title: 'JSON文件路径', minWidth: 160}
+                    , {field: 'code', title: '任务编码', width: 110}
+                    , {field: 'dataxHome', title: 'DataX根目录', minWidth: 160}
                     , {field: 'jsonFileName', title: 'JSON文件名', minWidth: 120}
-
-                    , {field: 'pythonscriptPath', title: 'PYTHON脚本路径', minWidth: 160}
-                    , {field: 'pythonscriptFileName', title: 'PYTHON脚本文件名', minWidth: 180}
-
-                    , {field: 'serverIp', title: '服务器IP', minWidth: 120, sort: true}
-
+                    , {field: 'pythonscriptFileName', title: 'PYTHON脚本文件名', minWidth: 160}
+                    , {field: 'serverIp', title: '服务器IP', width: 120}
                     , {
-                    field: 'createTime', width: 140, title: '创建时间', templet: function (d) {
+                    field: 'createTime', width: 160, title: '创建时间', templet: function (d) {
                         return util.toDateString(new Date(d.createTime).getTime());
                     }
                 }
+                    , {field: 'runstateName', title: '运行状态', width: 100, sort: true}
 
-                    , {field: 'runStateName', title: '运行状态', width: 100, sort: true}
-
-                    //, {title: '操作', templet: '#currentTableBar', fixed: "right", align: "center", minWidth: 180}
+                    , {title: '操作', templet: '#currentTableBar', fixed: "right", align: "center", minWidth: 180}
                     , {title: '基础操作', templet: '#baseTableBar', fixed: "right", align: "center", minWidth: 160}
                 ]
             ],
@@ -136,7 +125,6 @@
                     "count": res.count, //解析数据长度
                     "data": res.data //解析数据列表
                 };
-
             }
         });
 
@@ -163,8 +151,8 @@
                 shadeClose: true,
                 shade: false,
                 maxmin: true, //开启最大化最小化按钮
-                area: ['893px', '600px'],
-                content: "/DataxConfigView/addDataxConfig?isAdd=1"
+                area: ['700px', '800px'],
+                content: "/DataXConfigView/addDataxConfig?isAdd=1"
             });
         });
 
@@ -180,29 +168,13 @@
 
             if (IdList.length > 0) {
                 layer.confirm('真的删除所选行么?', {icon: 3, title: '提示'}, function (index) {
-                    FlumeRequest(IdList, "/DataxConfigView/deleteDataxConfig")
+                    FlumeRequest(IdList, "/DataXConfigView/deleteDataxConfig")
                 });
             } else {
                 layer.msg("请选择数据！！", {anim: 6, icon: 5});
             }
 
         });
-
-        /*$(".data-refresh-btn").on("click", function () {
-            var checkStatus = table.checkStatus('currentTableId')
-                , data = checkStatus.data;
-
-            var contextList = new Array(data.length);
-            for (var i = 0; i < data.length; i++) {
-                contextList[i] = data[i].contextId;
-            }
-            if (contextList.length > 0) {
-                FlumeRequest(contextList, "/flumeConfigView/refreshFlumeRunStatus")
-            } else {
-                layer.msg("请选择数据！！", {anim: 6, icon: 5});
-            }
-
-        });*/
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
@@ -219,8 +191,8 @@
                     shadeClose: true,
                     shade: false,
                     maxmin: true, //开启最大化最小化按钮
-                    area: ['893px', '600px'],
-                    content: "/DataxConfigView/updateDataxConfig?isAdd=0&id=" + id
+                    area: ['893px', '800px'],
+                    content: "/DataXConfigView/updateDataxConfig?isAdd=0&id=" + id
                 });
 
             } else if (obj.event === 'delete') {
@@ -228,7 +200,23 @@
                 layer.confirm('真的删除行么?', {icon: 3, title: '提示'}, function (index) {
                     var id = data.id;
                     IdList[0] = id;
-                    FlumeRequest(IdList, "/DataxConfigView/deleteDataxConfig")
+                    FlumeRequest(IdList, "/DataXConfigView/deleteDataxConfig")
+                });
+            }  else if (obj.event === 'startDataX') {
+                var id = data.id;
+                layer.confirm('真的开启么?', {icon: 3, title: '提示'}, function (index) {
+                    startAndStop(id, "/DataXConfigView/startDataX");
+                });
+
+            }  else if (obj.event === 'restartDataX') {
+                var id = data.id;
+                layer.confirm('真的重启么?', {icon: 3, title: '提示'}, function (index) {
+                    startAndStop(id, "/DataXConfigView/restartDataX");
+                });
+            }else if (obj.event === 'stopDataX') {
+                var id = data.id;
+                layer.confirm('真的关闭么?', {icon: 3, title: '提示'}, function (index) {
+                    startAndStop(id, "/DataXConfigView/stopDataX");
                 });
             }
         });

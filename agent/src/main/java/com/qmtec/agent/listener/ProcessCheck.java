@@ -1,5 +1,6 @@
 package com.qmtec.agent.listener;
 
+import com.qmtec.agent.service.DataX.DataxService;
 import com.qmtec.agent.service.flume.FlumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ public class ProcessCheck implements ApplicationRunner {
 
     @Autowired
     private FlumeService flumeService;
+    @Autowired
+    private DataxService dataxService;
 
     private static final int scheduleNum = 1;
 
@@ -58,6 +61,7 @@ public class ProcessCheck implements ApplicationRunner {
         public void run() {
             try {
                 flumeService.processCheck();
+                dataxService.processCheck();
             } catch (Exception e) {
                 e.printStackTrace();
                 log.error("定时监控任务执行失败");

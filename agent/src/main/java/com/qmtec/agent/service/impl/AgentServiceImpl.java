@@ -1,6 +1,7 @@
 package com.qmtec.agent.service.impl;
 
 import com.qmtec.agent.service.AgentService;
+import com.qmtec.agent.service.DataX.DataxService;
 import com.qmtec.agent.service.flume.FlumeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ public class AgentServiceImpl  implements AgentService {
 
     @Autowired
     private FlumeService flumeService;
+    @Autowired
+    private DataxService dataxService;
 
     /**
      * 启动flume
@@ -45,4 +48,20 @@ public class AgentServiceImpl  implements AgentService {
     public Boolean restartFlume(Long contextId, Map<String, String> initMap) {
         return flumeService.restart(contextId,initMap);
     }
+
+    @Override
+    public Boolean startDataX(String id, Map<String, String> initMap) {
+        return dataxService.startDataX(id,initMap);
+    }
+
+    @Override
+    public Boolean restartDataX(String id, Map<String, String> initMap) {
+        return dataxService.restartDataX(id,initMap);
+    }
+
+    @Override
+    public Boolean stopDataX(String id, Map<String, String> initMap) {
+        return dataxService.stopDataX(id,initMap);
+    }
+
 }

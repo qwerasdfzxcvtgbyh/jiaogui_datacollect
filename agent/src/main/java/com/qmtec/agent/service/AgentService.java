@@ -10,5 +10,9 @@ public interface AgentService {
 
     Boolean stopFlume(Long contextId, Map<String, String> initMap);
 
+    Boolean startDataX(String id, Map<String, String> initMap);
 
+    Boolean restartDataX(String id, Map<String, String> initMap);
+
+    Boolean stopDataX(String id, Map<String, String> initMap);
 }

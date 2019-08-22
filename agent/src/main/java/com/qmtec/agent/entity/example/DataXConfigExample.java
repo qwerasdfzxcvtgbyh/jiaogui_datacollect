@@ -1,6 +1,6 @@
-package com.qmtec.servicecore.entity.example;
+package com.qmtec.agent.entity.example;
 
-import com.qmtec.servicecore.entity.DataXConfig;
+import com.qmtec.agent.entity.DataXConfig;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -2638,6 +2638,6 @@ public class DataXConfigExample {
          *
          * @mbg.generated
          */
-        void example(com.qmtec.servicecore.entity.example.DataXConfigExample example);
+        void example(com.qmtec.agent.entity.example.DataXConfigExample example);
     }
 }

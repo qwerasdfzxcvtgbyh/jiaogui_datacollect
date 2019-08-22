@@ -1,32 +1,20 @@
 package com.qmtec.agent.comm;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
  * 获取自定义配置常量类
- *
  */
-
 @Component
 public class Constant {
 
-    /* @Getter
-     @Value("${serviceCore.host}")
-     public String serviceCoreHost; //serviceCore-Host端的Ip
+    //DataX json文件后缀
+    public static final String DATAX_JSON_SUFFIX = ".json";
 
-     /*@Getter
-     @Value("${flume.portBegin}")
-     public int portBegin; //端口的开始(包括)
+    //DataX python脚本后缀
+    public static final String DATAX_PYTHON_SUFFIX = ".py";
 
-     @Getter
-     @Value("${flume.portEnd}")
-     public int portEnd; //端口的结束(不包括)
-
-     @Getter
-     @Value("${port.acquisition.times}")
-     public int port_acquisition_times;//flume监控端口获取次数*/
+    //启动脚本的日志输出路径
+    public static final String DATAX_ETLLOG = "etl_log";
 
 }
