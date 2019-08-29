@@ -1,0 +1,15 @@
+[ERROR] <2019-08-29 17:10:57,057> at [org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter.report] | click goto-> (LoggingFailureAnalysisReporter.java:42) - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in com.qmtec.hdfsUtil.config.HDFSProperties required a bean of type 'java.lang.String' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'java.lang.String' in your configuration.
+

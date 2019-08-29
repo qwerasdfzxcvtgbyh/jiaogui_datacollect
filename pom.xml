@@ -12,6 +12,7 @@
         <module>service-core</module>
         <module>agent</module>
         <module>common</module>
+        <module>hdfsUtil</module>
     </modules>
 
     <properties>

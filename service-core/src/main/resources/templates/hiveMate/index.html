@@ -14,14 +14,22 @@
 
     <link rel="icon" href="/static/images/favicon.ico">
     <link rel="stylesheet" type="text/css" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <!--<link rel="stylesheet" type="text/css" href="/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">-->
+
     <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!--<style rel="stylesheet" type="text/css">
+        .layui-tab-title li:first-child > i {
+            display: none;
+        }
+    </style>-->
+
 </head>
 <body>
 
-<div>
     <div class="layui-side layui-bg-gray ">
         <div class="layui-side-scroll ">
             <div id="test9"></div>
@@ -30,18 +38,21 @@
 
     <!-- 右侧内容 -->
     <div class="layui-body">
-        <div class="layui-tab" lay-filter="bodyTab" lay-allowClose="true">
-            <ul class="layui-tab-title"></ul>
-            <div class="layui-tab-content"></div>
-        </div>
+            <div class="layui-tab" lay-filter="bodyTab" lay-allowClose="true">
+                <ul class="layui-tab-title"> </ul>
+                <div class="layui-tab-content"></div>
+            </div>
     </div>
-</div>
+
 
 <script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
 <script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
 
 <script th:inline="javascript">
+
+    // var d = [[${treeData}]];
     var treeData = [[${treeData}]];
+
 </script>
 
 <script>
@@ -68,19 +79,22 @@
                 } else {
                     url = "/hiveMateView/readTableInfo/" + obj.data.nodeData
                 }
+
                 var exist = $("li[lay-id='" + obj.data.id + "']").length;//判断是不是用重复的选项卡
                 if (exist > 0) {
                     element.tabChange('bodyTab', obj.data.id);// 切换到已有的选项卡
                 } else {
                     element.tabAdd('bodyTab', {
                         title: obj.data.title,
-                        content: '<iframe src=' + url + ' width="100%" style="min-height: 750px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>', // 选项卡内容，支持传入html
+                       // content: '<iframe  frameborder="0" scrolling="yes" style="overflow: visible;" src=" ' + url + '" width="99%" height="99%"></iframe>',
+                        content: '<iframe src='+url+' width="100%" style="min-height: 750px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>', // 选项卡内容，支持传入html
                         id: obj.data.id
                     });
                     element.tabChange('bodyTab', obj.data.id);
                 }
             }
         });
+
     });
 
     /**
@@ -95,6 +109,8 @@
             }
         }
     };
+
+
 </script>
 </body>
 </html>
