@@ -1,6 +1,7 @@
 package com.qmtec.servicecore.util.hive;
 
 
+import com.alibaba.fastjson.JSON;
 import com.qmtec.common.util.PropertiesUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -53,6 +54,6 @@ public class HiveJDBCUtil {
         String sql = "select * from ceshi.test1 limit 10";
         stmt.executeQuery(sql);*/
 
-        HiveDBOperator.query("default","select * from ceshi limit 200");
+        System.out.println(JSON.toJSONString(HiveDBOperator.query("default","select * from t_hm_category limit 200")));
     }
 }
