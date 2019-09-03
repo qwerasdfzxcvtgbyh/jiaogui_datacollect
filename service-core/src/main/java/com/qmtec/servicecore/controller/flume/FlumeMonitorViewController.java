@@ -4,6 +4,7 @@ package com.qmtec.servicecore.controller.flume;
 import com.qmtec.common.page.ListResult;
 import com.qmtec.common.web.PageResultModel;
 import com.qmtec.common.web.ResultModel;
+import com.qmtec.servicecore.comm.FlumeTaskType;
 import com.qmtec.servicecore.model.dto.ChannelInfoDto;
 import com.qmtec.servicecore.model.dto.SinkInfoDto;
 import com.qmtec.servicecore.model.dto.SourceInfoDto;
@@ -41,17 +42,20 @@ public class FlumeMonitorViewController {
     public ModelAndView mysqlToKafka() {
 
         ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.addObject("flumeCfigs",flumeConfigService.getFlumeConfigByType(1));
-
+        modelAndView.addObject("flumeCfigs",flumeConfigService.getFlumeConfigByType(
+                FlumeTaskType.MysqlToKafka.value()
+        ));
         modelAndView.setViewName("/flumeMonitor/mysqlTokafka");
         return modelAndView;
     }
 
-    @RequestMapping(value = "/KafkaToKafka")
-    public ModelAndView KafkaToKafka() {
+    @RequestMapping(value = "/KafkaToHdfs")
+    public ModelAndView KafkaToHdfs() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/flumeMonitor/form");
+        modelAndView.addObject("flumeCfigs",flumeConfigService.getFlumeConfigByType(
+                FlumeTaskType.KafkaToHdfs.value()
+        ));
+        modelAndView.setViewName("/flumeMonitor/kafkaTohdfs");
         return modelAndView;
     }
 

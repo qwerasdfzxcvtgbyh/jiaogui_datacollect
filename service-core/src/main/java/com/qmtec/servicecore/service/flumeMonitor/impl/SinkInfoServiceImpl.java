@@ -124,6 +124,8 @@ public class SinkInfoServiceImpl implements SinkInfoService {
 
                     if(FlumeTaskType.MysqlToKafka.value().intValue() == type){
                         sinkInfoDtos = this.mysqlToKafkaViewDto(sinkInfoList,sinkInfoDtos);
+                    } else if (FlumeTaskType.KafkaToHdfs.value().intValue() == type) {
+                        sinkInfoDtos = this.kafkaToHdfsViewDto(sinkInfoList,sinkInfoDtos);
                     }
 
                     page1.setResult(sinkInfoDtos);
@@ -156,6 +158,39 @@ public class SinkInfoServiceImpl implements SinkInfoService {
                     .rollbackCount(sinkInfo.getRollbackCount())
                     .startTime(sinkInfo.getStartTime())
 
+                    .runState(sinkInfo.getRunState())
+                    .createTime(sinkInfo.getCreateTime())
+                    .build();
+
+            SinkInfo.RunState[] runstates = SinkInfo.RunState.values();
+            for (SinkInfo.RunState runstate : runstates) {
+                if (runstate.getValue().equals(sinkInfo.getRunState())) {
+                    sinkInfoDto.setRunStateName(runstate.getName());
+                    break;
+                }
+            }
+            sinkInfoDtos.add(sinkInfoDto);
+        });
+        return sinkInfoDtos;
+    }
+
+    private List<SinkInfoDto> kafkaToHdfsViewDto(List<SinkInfo> sinkInfoList,List<SinkInfoDto> sinkInfoDtos){
+        sinkInfoList.forEach(sinkInfo -> {
+            SinkInfoDto sinkInfoDto = SinkInfoDto.builder()
+                    .id(sinkInfo.getId())
+                    .componentName(sinkInfo.getComponentName())
+                    .ipAddr(sinkInfo.getIpAddr())
+                    .batchCompleteCount(sinkInfo.getBatchCompleteCount())
+                    .batchEmptyCount(sinkInfo.getBatchEmptyCount())
+                    .batchUnderflowCount(sinkInfo.getBatchUnderflowCount())
+                    .connectionClosedCount(sinkInfo.getConnectionClosedCount())
+                    .connectionCreatedCount(sinkInfo.getConnectionCreatedCount())
+                    .connectionFailedCount(sinkInfo.getConnectionFailedCount())
+                    .eventDrainattemptCount(sinkInfo.getEventDrainattemptCount())
+                    .eventDrainSuccessCount(sinkInfo.getEventDrainSuccessCount())
+                    .eventWriteFail(sinkInfo.getEventWriteFail())
+                    .channelReadFail(sinkInfo.getChannelReadFail())
+                    .startTime(sinkInfo.getStartTime())
                     .runState(sinkInfo.getRunState())
                     .createTime(sinkInfo.getCreateTime())
                     .build();

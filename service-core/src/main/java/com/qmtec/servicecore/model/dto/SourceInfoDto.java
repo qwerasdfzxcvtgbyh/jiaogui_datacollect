@@ -26,4 +26,14 @@ public class SourceInfoDto {
     private Date createTime;
     private Date modifyTime;
 
+    private String eventGetTimer;
+    private String appendBatchAcceptedCount;
+    private String eventAcceptedCount;
+    private String appendReceivedCount;
+    private String appendBatchReceivedCount;
+    private String kafkaCommitTimer;
+    private String eventReceivedCount;
+    private String appendAcceptedCount;
+    private String openConnectionCount;
+    private String kafkaEmptyCount;
 }

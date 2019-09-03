@@ -34,4 +34,6 @@ public class SinkInfoDto {
     private Integer deleteFlag;
     private Date modifyTime;
 
+    private String eventWriteFail;
+    private String channelReadFail;
 }

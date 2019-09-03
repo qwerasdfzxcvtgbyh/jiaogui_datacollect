@@ -117,12 +117,10 @@ public class FlumeMonitorServiceImpl implements FlumeMonitorService {
 
                 if (b) {
                     log.debug("ContextId : " + contextId + "任运行");
-
                     String content = flumeMonitor.getFlumeMonitorContent();
                     synchronized (this){
                         analyticalServices.analyticalContent(contextId, content);//解析内容
                     }
-
                 } else {
                     //修改任务为端口异常
                     flumeConfigService.updateFlumeConfigByContextIdAndRunstate(

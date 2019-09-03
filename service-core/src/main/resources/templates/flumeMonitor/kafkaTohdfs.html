@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">数据类型</label>
+                            <div class="layui-input-inline">
+                                <select name="dataType" id="dataType">
+                                    <option value="1">最新</option>
+                                    <option value="0">过往</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所属任务</label>
+                            <div class="layui-input-inline">
+                                <select name="contextId">
+                                    <option value=""></option>
+                                    <option th:each="f : ${flumeCfigs}" th:value="${f.contextId}"
+                                            th:text="${f.name }">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <a class="layui-btn" lay-submit="" lay-filter="data-search-btn">搜索</a>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            <button type="button" class="layui-btn layui-btn-normal" onclick="autoRefreshMonitor()">刷新
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>SOURCE</legend>
+            <table class="layui-hide" id="currentSourceTableId" lay-filter="currentSourceTableId"></table>
+        </fieldset>
+
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>CHANNEL</legend>
+            <table class="layui-hide" id="currentChannelTableId" lay-filter="currentChannelTableId"></table>
+        </fieldset>
+
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>SINK</legend>
+            <table class="layui-hide" id="currentSinkTableId" lay-filter="currentSinkTableId"></table>
+        </fieldset>
+
+    </div>
+</div>
+
+<script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+
+<script>
+
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            util = layui.util,
+            table = layui.table;
+
+        /**
+         * source
+         *
+         */
+        table.render({
+            id: "currentSourceTableId",
+            elem: '#currentSourceTableId',
+            url: '/flumeMonitorView/listSelectSoureceInfo/2',
+            method: 'post',
+            cols: [
+                [
+                    {field: 'componentName', title: '组件名称', width: 140}
+                    , {field: 'ipAddr', title: 'IP', width: 160}
+
+                    , {field: 'eventGetTimer', title: '事件计时器', minWidth: 120}
+                    , {field: 'appendBatchAcceptedCount', title: '追加到channel中的批数量', minWidth: 120}
+                    , {field: 'eventAcceptedCount', title: '成功放入channel的event数量', minWidth: 120}
+                    , {field: 'appendReceivedCount', title: 'source追加目前收到的数量', minWidth: 120}
+                    , {field: 'appendBatchReceivedCount', title: 'source端刚刚追加的批数量', minWidth: 120}
+                    , {field: 'kafkaCommitTimer', title: 'kafka提交时间', minWidth: 120}
+                    , {field: 'eventReceivedCount', title: 'source端成功收到的event数量', minWidth: 120}
+                    , {field: 'appendAcceptedCount', title: '放入channel的event数量', minWidth: 120}
+                    , {field: 'openConnectionCount', title: '打开的连接数', minWidth: 120}
+                    , {field: 'kafkaEmptyCount', title: '空的计数', minWidth: 120}
+
+                    , {field: 'runStateName', title: '运行状态', width: 120}
+                    , {
+                    field: 'createTime', title: '创建时间', templet: function (d) {
+                        return util.toDateString(new Date(d.createTime).getTime());
+                    }
+                }
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            statusCode: 200,
+            page: true,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+        });
+
+
+        /**
+         * channel
+         */
+        table.render({
+            id: "currentChannelTableId",
+            elem: '#currentChannelTableId',
+            url: '/flumeMonitorView/listSelectChannelInfo/2',
+            method: 'post',
+            cols: [
+                [
+                    {field: 'componentName', title: '组件名称', width: 140}
+                    , {field: 'ipAddr', title: 'IP', width: 160}
+
+                    , {
+                    field: 'startTime', title: '启动时间', minWidth: 120, templet: function (d) {
+                        return util.toDateString(new Date(d.createTime).getTime());
+                    }
+                }
+                    , {field: 'putSuccessCount', title: '成功放入数量', minWidth: 120}
+                    , {field: 'putAttemptCount', title: '正在放入数量', minWidth: 120}
+                    , {field: 'takeSuccessCount', title: '成功取走的数量', minWidth: 120}
+                    , {field: 'takeAttemptCount', title: '正在取走的数量', minWidth: 120}
+                    , {field: 'channelCapacity', title: '通道容量', minWidth: 120}
+                    , {field: 'channelSize', title: '通道总量', minWidth: 120}
+                    , {field: 'percentage', title: '百分比', minWidth: 120}
+                    , {field: 'runStateName', title: '运行状态', width: 120}
+                    , {
+                    field: 'createTime', title: '创建时间', templet: function (d) {
+                        return util.toDateString(new Date(d.createTime).getTime());
+                    }
+                }
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            statusCode: 200,
+            page: true,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+        });
+
+        /**
+         * sink
+         */
+        table.render({
+            id: "currentSinkTableId",
+            elem: '#currentSinkTableId',
+            url: '/flumeMonitorView/listSelectSinkInfo/2',
+            method: 'post',
+            cols: [
+                [
+                    {field: 'componentName', title: '组件名称', width: 140}
+                    , {field: 'ipAddr', title: 'IP', width: 160}
+                    , {
+                    field: 'startTime', title: '启动时间', minWidth: 120, templet: function (d) {
+                        return util.toDateString(new Date(d.createTime).getTime());
+                    }
+                }
+                    , {field: 'connectionCreatedCount', title: '存储系统创建连接数量', width: 120}
+                    , {field: 'batchCompleteCount', title: '批处理完成计数', width: 120}
+                    , {field: 'batchEmptyCount', title: '空的批量的数量', width: 120}
+                    , {field: 'eventDrainattemptCount', title: '事件总数量', minWidth: 120}
+                    , {field: 'batchUnderflowCount', title: '批量下溢计数', minWidth: 120}
+                    , {field: 'connectionFailedCount', title: '由于错误关闭的连接数量', minWidth: 120}
+                    , {field: 'connectionClosedCount', title: '存储系统关闭的连接数量', minWidth: 120}
+                    , {field: 'eventWriteFail', title: '事件写失败数', minWidth: 120}
+                    , {field: 'channelReadFail', title: '通道写失败数', minWidth: 120}
+                    , {field: 'eventDrainSuccessCount', title: '成功写出到存储的事件总数量', minWidth: 120}
+                    , {field: 'runStateName', title: '运行状态', width: 120}
+                    , {
+                    field: 'createTime', title: '创建时间', templet: function (d) {
+                        return util.toDateString(new Date(d.createTime).getTime());
+                    }
+                }
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            statusCode: 200,
+            page: true,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            //执行搜索重载
+            //source
+            table.reload('currentSourceTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+
+            //channel
+            table.reload('currentChannelTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+
+            //sink
+            table.reload('currentSinkTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+
+            return false;
+        });
+    });
+
+    function autoRefreshMonitor() {
+        var index = layer.load(1)
+        $.ajax({
+            //请求方式
+            type: "get",
+            //请求的媒体类型
+            contentType: "application/json;charset=UTF-8",
+            //请求地址
+            url: "/flumeMonitorView/autoRefreshMonitor/2",
+            //数据，json字符串
+            //data: JSON.stringify(contextList),
+            //dataType: 'json',
+            //请求成功
+            success: function (result) {
+                layer.close(index);
+                if (result.code == 200 && result.data == true) {
+                    layui.table.reload('currentSourceTableId');
+                    layui.table.reload('currentChannelTableId');
+                    layui.table.reload('currentSinkTableId');
+                } else {
+                    layer.msg("异常信息：" + result.message, {icon: 5});
+                }
+            },
+            error: function (e) {
+                layer.close(index);
+                // layer.msg("异常信息：" + e.responseText, {anim: 6, icon: 5});
+            }
+        });
+    }
+
+</script>
+<script>
+
+</script>
+
+</body>
+</html>

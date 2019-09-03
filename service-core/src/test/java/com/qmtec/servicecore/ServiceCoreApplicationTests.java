@@ -1,7 +1,5 @@
 package com.qmtec.servicecore;
 
-import com.qmtec.hdfsUtil.HDFSUtil;
-import org.apache.hadoop.fs.FileStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +12,7 @@ public class ServiceCoreApplicationTests {
     @Test
     public void contextLoads() {
 
-        try {
+        /*try {
             //HDFSUtil.listFiles("/",false);
 
             FileStatus[] fileStatuses = HDFSUtil.listFileStatus("/");
@@ -23,7 +21,7 @@ public class ServiceCoreApplicationTests {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 

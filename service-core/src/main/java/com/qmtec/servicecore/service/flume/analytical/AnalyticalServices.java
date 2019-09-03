@@ -42,8 +42,6 @@ public class AnalyticalServices {
     @Autowired
     private SinkInfoService sinkInfoService;
 
-
-
     public void analyticalContent(Long contextId, String content) throws Exception {
 
         JSONObject jsonObject = JSONObject.parseObject(content);
@@ -101,18 +99,28 @@ public class AnalyticalServices {
 
             }
         }
-        FlumeConfig flumeConfig = flumeConfigService.selectOneFlumeConfig(contextId);
 
+        FlumeConfig flumeConfig = flumeConfigService.selectOneFlumeConfig(contextId);
         if (FlumeTaskType.MysqlToKafka.getValue().equals(flumeConfig.getFlumeConfigType())) {
             this.mysqlToKafka(flumeConfig, source, channel, sink);
+        }else if (FlumeTaskType.KafkaToHdfs.getValue().equals(flumeConfig.getFlumeConfigType())) {
+            this.kafkaToHdfs(flumeConfig, source, channel, sink);
         }
 
     }
 
     private void mysqlToKafka(FlumeConfig flumeConfig, FlumeAnalyticalComm source, FlumeAnalyticalComm channel, FlumeAnalyticalComm sink) {
-        sourceAnalyticalSerive.mysql(flumeConfig, source);
+        this.comm(flumeConfig, source, channel, sink);
+    }
+
+    private void kafkaToHdfs(FlumeConfig flumeConfig, FlumeAnalyticalComm source, FlumeAnalyticalComm channel, FlumeAnalyticalComm sink) {
+       this.comm(flumeConfig, source, channel, sink);
+    }
+
+    private void comm(FlumeConfig flumeConfig, FlumeAnalyticalComm source, FlumeAnalyticalComm channel, FlumeAnalyticalComm sink) {
+        sourceAnalyticalSerive.sourceAnalyticalByTaskType(flumeConfig, source);
         channelAnalyticalSerive.memory(flumeConfig, channel);
-        sinkAnalyticalSerive.kafka(flumeConfig, sink);
+        sinkAnalyticalSerive.sinkAnalyticalByTaskType(flumeConfig, sink);
     }
 
 }

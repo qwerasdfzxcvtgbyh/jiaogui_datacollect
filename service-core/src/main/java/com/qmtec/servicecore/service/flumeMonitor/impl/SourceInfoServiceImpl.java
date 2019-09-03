@@ -125,8 +125,11 @@ public class SourceInfoServiceImpl implements SourceInfoService {
                     page1.setTotal(count);
 
                     List<SourceInfoDto> sourceInfoDtos = new ArrayList<SourceInfoDto>();
-                    if(FlumeTaskType.MysqlToKafka.value().intValue() == type){
+
+                    if (FlumeTaskType.MysqlToKafka.value().intValue() == type) {
                         sourceInfoDtos = this.mysqlToKafkaViewDto(sourceInfoList, sourceInfoDtos);
+                    } else if (FlumeTaskType.KafkaToHdfs.value().intValue() == type) {
+                        sourceInfoDtos = this.KafkaToHdfsViewDto(sourceInfoList, sourceInfoDtos);
                     }
 
                     page1.setResult(sourceInfoDtos);
@@ -166,6 +169,37 @@ public class SourceInfoServiceImpl implements SourceInfoService {
         return sourceInfoDtos;
     }
 
+    private List<SourceInfoDto> KafkaToHdfsViewDto(List<SourceInfo> sourceInfoList, List<SourceInfoDto> sourceInfoDtos) {
+        sourceInfoList.forEach(sourceInfo -> {
+            SourceInfoDto sourceInfoDto = SourceInfoDto.builder()
+                    .id(sourceInfo.getId())
+                    .componentName(sourceInfo.getComponentName())
+                    .eventGetTimer(sourceInfo.getEventGetTimer())
+                    .appendBatchAcceptedCount(sourceInfo.getAppendBatchAcceptedCount())
+                    .eventAcceptedCount(sourceInfo.getEventAcceptedCount())
+                    .appendReceivedCount(sourceInfo.getAppendReceivedCount())
+                    .appendBatchReceivedCount(sourceInfo.getAppendBatchReceivedCount())
+                    .kafkaCommitTimer(sourceInfo.getKafkaCommitTimer())
+                    .eventReceivedCount(sourceInfo.getEventReceivedCount())
+                    .appendAcceptedCount(sourceInfo.getAppendAcceptedCount())
+                    .openConnectionCount(sourceInfo.getOpenConnectionCount())
+                    .kafkaEmptyCount(sourceInfo.getKafkaEmptyCount())
+                    .ipAddr(sourceInfo.getIpAddr())
+                    .runState(sourceInfo.getRunState())
+                    .createTime(sourceInfo.getCreateTime())
+                    .build();
+
+            SourceInfo.RunState[] runstates = SourceInfo.RunState.values();
+            for (SourceInfo.RunState runstate : runstates) {
+                if (runstate.getValue().equals(sourceInfo.getRunState())) {
+                    sourceInfoDto.setRunStateName(runstate.getName());
+                    break;
+                }
+            }
+            sourceInfoDtos.add(sourceInfoDto);
+        });
+        return sourceInfoDtos;
+    }
 
     /**
      * 根据contextId获取正在运行的

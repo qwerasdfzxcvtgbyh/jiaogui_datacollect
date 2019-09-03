@@ -1,4 +1,4 @@
-package com.qmtec.hdfsUtil;
+package com.qmtec.hdfsUtil.resource.hdfs;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -13,25 +13,22 @@ import java.net.URI;
 
 //Hdfs - 工具类
 @Slf4j
-public class HDFSUtil {
 
-    //缓冲大小
-    private static final int bufferSize = 1024 * 1024 * 64;
+public  class HdfsUtil {
     //hdfs的url
     private static String nameNodeUrl;
     //操作角色
     private static String user;
 
-    public HDFSUtil() {
-    }
+    //缓冲大小
+    private static final int bufferSize = 1024 * 1024 * 64;
+
+    public HdfsUtil() {}
 
     public static void setNameNodeUrl(String nameNodeUrl) {
-        HDFSUtil.nameNodeUrl = nameNodeUrl;
+        nameNodeUrl = nameNodeUrl;
     }
-
-    public static void setUser(String user) {
-        HDFSUtil.user = user;
-    }
+    public static void setUser(String user) { user = user;}
 
     private static Configuration getConfiguration() {
         Configuration configuration = new Configuration();
@@ -66,6 +63,7 @@ public class HDFSUtil {
         FileSystem fs = getFileSystem();
         Path srcPath = new Path(path);
         boolean isExists = fs.exists(srcPath);
+        fs.close();
         return isExists;
     }
 

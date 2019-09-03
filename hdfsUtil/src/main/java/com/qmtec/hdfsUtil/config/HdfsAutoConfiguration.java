@@ -1,6 +1,6 @@
 package com.qmtec.hdfsUtil.config;
 
-import com.qmtec.hdfsUtil.HDFSUtil;
+import com.qmtec.hdfsUtil.resource.hdfs.HdfsUtil;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class HdfsAutoConfiguration {
 
     @Bean
-    public HDFSUtil createHdfsUtil(HDFSProperties properties) {
+    public HdfsUtil createHdfsUtil(HDFSProperties properties) {
         return HdfsUtolGenerator.generator(properties);
     }
 

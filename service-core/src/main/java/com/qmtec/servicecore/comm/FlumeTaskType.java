@@ -2,7 +2,7 @@ package com.qmtec.servicecore.comm;
 
 public enum FlumeTaskType {
     MysqlToKafka(new Integer("1"), "mysql到kafka"),
-    KafkaToKafka(new Integer("2"), "kafka到kafka");
+    KafkaToHdfs(new Integer("2"), "kafka到hdfs");
 
     private final Integer value;
 

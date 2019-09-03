@@ -24,6 +24,8 @@
     <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="event_write_fail" jdbcType="VARCHAR" property="eventWriteFail" />
+    <result column="channel_read_fail" jdbcType="VARCHAR" property="channelReadFail" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -99,7 +101,7 @@
     id, component_name, ip_addr, start_time, connection_created_count, batch_complete_count, 
     batch_empty_count, event_drainAttempt_count, batch_underflow_count, connection_failed_count, 
     connection_closed_count, rollback_count, event_drain_success_count, kafka_event_sendTimer, 
-    run_state, delete_flag, create_time, modify_time
+    run_state, delete_flag, create_time, modify_time, event_write_fail, channel_read_fail
   </sql>
   <select id="selectByExample" parameterType="com.qmtec.servicecore.entity.example.SinkInfoExample" resultMap="BaseResultMap">
     <!--
@@ -222,14 +224,16 @@
       batch_underflow_count, connection_failed_count, 
       connection_closed_count, rollback_count, event_drain_success_count, 
       kafka_event_sendTimer, run_state, delete_flag, 
-      create_time, modify_time)
+      create_time, modify_time, event_write_fail, 
+      channel_read_fail)
     values (#{id,jdbcType=VARCHAR}, #{componentName,jdbcType=VARCHAR}, #{ipAddr,jdbcType=VARCHAR}, 
       #{startTime,jdbcType=TIMESTAMP}, #{connectionCreatedCount,jdbcType=VARCHAR}, #{batchCompleteCount,jdbcType=VARCHAR}, 
       #{batchEmptyCount,jdbcType=VARCHAR}, #{eventDrainattemptCount,jdbcType=VARCHAR}, 
       #{batchUnderflowCount,jdbcType=VARCHAR}, #{connectionFailedCount,jdbcType=VARCHAR}, 
       #{connectionClosedCount,jdbcType=VARCHAR}, #{rollbackCount,jdbcType=VARCHAR}, #{eventDrainSuccessCount,jdbcType=VARCHAR}, 
       #{kafkaEventSendtimer,jdbcType=VARCHAR}, #{runState,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{eventWriteFail,jdbcType=VARCHAR}, 
+      #{channelReadFail,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="map">
     <!--
@@ -299,6 +303,12 @@
           <if test="record.modifyTime != null">
             modify_time,
           </if>
+          <if test="record.eventWriteFail != null">
+            event_write_fail,
+          </if>
+          <if test="record.channelReadFail != null">
+            channel_read_fail,
+          </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
       </otherwise>
@@ -365,6 +375,12 @@
           </if>
           <if test="record.modifyTime != null">
             #{record.modifyTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.eventWriteFail != null">
+            #{record.eventWriteFail,jdbcType=VARCHAR},
+          </if>
+          <if test="record.channelReadFail != null">
+            #{record.channelReadFail,jdbcType=VARCHAR},
           </if>
         </trim>
       </otherwise>
@@ -449,6 +465,12 @@
           <if test="record.modifyTime != null">
             modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
           </if>
+          <if test="record.eventWriteFail != null">
+            event_write_fail = #{record.eventWriteFail,jdbcType=VARCHAR},
+          </if>
+          <if test="record.channelReadFail != null">
+            channel_read_fail = #{record.channelReadFail,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -479,7 +501,9 @@
       run_state = #{record.runState,jdbcType=INTEGER},
       delete_flag = #{record.deleteFlag,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP}
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      event_write_fail = #{record.eventWriteFail,jdbcType=VARCHAR},
+      channel_read_fail = #{record.channelReadFail,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -550,6 +574,12 @@
           <if test="record.modifyTime != null">
             modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
           </if>
+          <if test="record.eventWriteFail != null">
+            event_write_fail = #{record.eventWriteFail,jdbcType=VARCHAR},
+          </if>
+          <if test="record.channelReadFail != null">
+            channel_read_fail = #{record.channelReadFail,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -577,7 +607,9 @@
       run_state = #{runState,jdbcType=INTEGER},
       delete_flag = #{deleteFlag,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      event_write_fail = #{eventWriteFail,jdbcType=VARCHAR},
+      channel_read_fail = #{channelReadFail,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.qmtec.servicecore.entity.example.SinkInfoExample" resultMap="BaseResultMap">
