@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>列信息</legend>
+        </fieldset>
+
+        <form class="layui-form" action="" lay-filter="example" th:object="${columInfo}">
+            <input type="hidden" name="id" class="layui-input" th:field="*{id}">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" lay-reqtext="名称是必选项，岂能为空？"
+                           autocomplete="off" placeholder="请输入名称"
+                           class="layui-input" th:field="*{name}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select name="type" th:field="*{type}" lay-verify="required" lay-reqtext="类型是必选项，岂能为空？">
+                        <option value=""></option>
+
+                        <option th:each="type : ${columTypes}" th:value="${type.id}"
+                                th:text="${type.name }">
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script th:inline="javascript">
+    var isAdd = [[${isAdd}]];
+
+    if (isAdd != 1) {
+        $("input[name='name']").attr("readOnly", "true");
+        $("input[name='name']").css("color", "gray");
+    }
+</script>
+
+
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form
+            , layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 5) {
+                    return '名称至少得5个字符啊';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var d = {};
+            d = data.field;
+            if (isAdd == 1) {
+                var oldData = parent.layui.table.cache["layTable"];
+                //判断当前添加的存不存在
+                if (isInArray(oldData, d.name)) {
+                    layer.msg("异常信息：" + d.name + "，表格中存在相同数据", {icon: 5});
+                } else {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+
+                    var d1 = {};
+                    d1["type"] = d.type;
+                    d1["name"] = d.name;
+                    oldData.push(d1);
+
+                    parent.layui.table.reload("layTable", {
+                        data: oldData
+                    });
+                }
+            }
+            return false;
+        });
+    });
+
+    function isInArray(arr, value) {
+        for (var i = 0; i < arr.length; i++) {
+            if (value === arr[i].name) {
+                return true;
+            }
+        }
+        return false;
+    }
+</script>
+
+</body>
+</html>

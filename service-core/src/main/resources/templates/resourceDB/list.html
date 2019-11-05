@@ -30,10 +30,10 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">类型</label>
                             <div class="layui-input-inline">
-                                <select name="filetype"  >
+                                <select name="databaseType">
                                     <option value=""></option>
-                                    <option  th:each="dbType : ${dbTypes}" th:value="${dbType.id}"
-                                             th:text="${dbType.name }">
+                                    <option th:each="dbType : ${dbTypes}" th:value="${dbType.id}"
+                                            th:text="${dbType.name }">
                                 </select>
                             </div>
                         </div>
@@ -49,6 +49,8 @@
 
         <div class="layui-btn-group">
             <button class="layui-btn data-add-btn" onclick="addResource(1)">添加Mysql</button>
+            <button class="layui-btn data-add-btn" onclick="addResource(3)">添加Hive</button>
+            <button class="layui-btn data-add-btn" onclick="addResource(2)">添加Hdfs</button>
             <button class="layui-btn layui-btn-danger data-delete-btn">删除</button>
         </div>
 
@@ -56,6 +58,17 @@
         <script type="text/html" id="resourceDbBar">
             <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+        <script type="text/html" id="currentTableBar">
+            <!-- 这里同样支持 laytpl 语法，如： -->
+            {{#  if( d.databaseType == 1){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="relational">数据库信息</a>
+            {{#  }else if(d.databaseType == 3){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="hive">数据库信息</a>
+            {{#  }else{ }}
+            <a class="layui-btn layui-btn-xs layui-btn-disabled"> 待建 </a>
+            {{#  }}}
         </script>
     </div>
 </div>
@@ -73,7 +86,7 @@
         table.render({
             id: "resourceDbId",
             elem: '#resourceDbId',
-            url: '#',
+            url: '/resourceDBView/listSelectResouceDB',
             method: 'post',
             cols: [
                 [
@@ -86,7 +99,8 @@
                         return util.toDateString(new Date(d.createTime).getTime());
                     }
                 }
-                    , {title: '操作', templet: '#resourceDbBar', fixed: "right", align: "center", width: 120}
+                    , {title: '操作', templet: '#currentTableBar', fixed: "right", align: "center", minWidth: 240}
+                    , {title: '基础操作', templet: '#resourceDbBar', fixed: "right", align: "center", width: 120}
                 ]
             ],
             limits: [10, 15, 20, 25, 50, 100],
@@ -161,6 +175,8 @@
             var data = obj.data;
             if (obj.event === 'edit') {
                 var id = data.id;
+                var databaseType = data.databaseType;
+
                 layer.open({
                     type: 2,
                     title: "修改",
@@ -168,7 +184,7 @@
                     shade: false,
                     maxmin: true, //开启最大化最小化按钮
                     area: ['700px', '710px'],
-                    content: "/fileTemplateView/updateFileTemplate?isAdd=0&id=" + id
+                    content: "/resourceDBView/updateResourceDB?isAdd=0&id=" + id + "&type=" + databaseType
                 });
 
             } else if (obj.event === 'delete') {
@@ -178,7 +194,35 @@
                     contextList[0] = id;
                     deleteFlume(contextList);
                 });
+            } else if (obj.event === 'relational') {
+                var id = data.id;
+                var index = layer.open({
+                    type: 2,
+                    title: '信息展示',
+                    shadeClose: true,
+                    shade: false,
+                    resize:false,
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['893px', '880px'],
+                    content: "/resourceDBView/relationIndex/"+id
+                });
+                layer.full(index);
+            } else if (obj.event === 'hive') {
+                var id = data.id;
+                var index = layer.open({
+                    type: 2,
+                    title: '信息展示',
+                    shadeClose: true,
+                    shade: false,
+                    resize:false,
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['893px', '880px'],
+                    content: "/resourceDBView/hiveIndex/"+id
+                });
+                layer.full(index);
             }
+
+
         });
 
     });
@@ -190,14 +234,14 @@
             //请求的媒体类型
             contentType: "application/json;charset=UTF-8",
             //请求地址
-            url: "/fileTemplateView/deleteFileTemplate",
+            url: "/resourceDBView/deleteResourceDb",
             //数据，json字符串
             data: JSON.stringify(ids),
             //dataType: 'json',
             //请求成功
             success: function (result) {
                 if (result.code == 200 && result.data == true) {
-                    layui.table.reload('fileTemplateTableId');//重载父页表格，参数为表格ID
+                    layui.table.reload('resourceDbId');//重载父页表格，参数为表格ID
                     layer.msg(result.message, {icon: 6, time: 1000});
                 } else {
                     layer.msg("异常信息：" + result.message, {icon: 5});
@@ -211,6 +255,7 @@
         });
     }
 
+    //添加源
     function addResource(type) {
         layer.open({
             type: 2,
@@ -219,7 +264,7 @@
             shade: false,
             maxmin: true, //开启最大化最小化按钮
             area: ['700px', '710px'],
-            content: "/resourceDBView/addResourceDB?type="+type
+            content: "/resourceDBView/addResourceDB?isAdd=1&type=" + type
         });
     }
 </script>

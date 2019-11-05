@@ -19,10 +19,12 @@ public class HiveDBOperator {
     }
 
     public static HiveDBOperator.HiveQueryResult query(String hiveDBName, String sql) throws SQLException {
+        return HiveDBOperator.query(HiveJDBCUtil.getHiveJDBCConnection(hiveDBName),sql);
+    }
+
+    public static HiveDBOperator.HiveQueryResult query(Connection conection,String sql) throws SQLException {
         List<Map<String, Object>> resultList = new ArrayList();
         List<String> metaData = new ArrayList();
-        Connection conection = HiveJDBCUtil.getHiveJDBCConnection(hiveDBName);
-
         try {
             Statement stmt = conection.createStatement();
             ResultSet resultSet = stmt.executeQuery(sql);
@@ -70,11 +72,10 @@ public class HiveDBOperator {
                 var18.printStackTrace();
             }
         }
-
         HiveDBOperator.HiveQueryResult result = new HiveDBOperator.HiveQueryResult();
         result.setResult(resultList);
         result.setMetaData(metaData);
-        return result;
+        return  result;
     }
 
     public static boolean update(String sql) throws SQLException {

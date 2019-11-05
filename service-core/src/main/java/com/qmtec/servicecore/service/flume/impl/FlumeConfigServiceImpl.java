@@ -666,7 +666,7 @@ public class FlumeConfigServiceImpl implements FlumeConfigService {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("Data Query Failure >>> [{}]", JSON.toJSONString(e.getMessage()));
-            throw new RuntimeException("Data Query Failure");
+            throw new CustomException("Data Query Failure");
         }
         return flumeConfigDto;
     }

@@ -1,12 +1,12 @@
 package com.qmtec.servicecore.service.resourceDB.backstageService.mysql;
 
-import com.qmtec.dataSource.entity.ResourceDB;
+import com.qmtec.dataSource.dbModel.mysql.MysqlBaseSource;
 import com.qmtec.servicecore.service.resourceDB.backstageService.DbService;
 
-public class MySqlDbService implements DbService {
+import java.sql.Connection;
 
-    @Override
-    public Boolean testConn(ResourceDB resourceDB) throws Exception {
-        return null;
-    }
+public interface MySqlDbService extends DbService {
+
+
+     Connection conn(MysqlBaseSource mysqlBaseSource) throws Exception;
 }

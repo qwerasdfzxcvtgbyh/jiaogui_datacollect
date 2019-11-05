@@ -1,7 +1,11 @@
 package com.qmtec.servicecore.service.resourceDB.backstageService;
 
 
-import com.qmtec.dataSource.entity.ResourceDB;
+import com.qmtec.common.page.ListResult;
+import com.qmtec.dataSource.entity.DatabaseSource;
+
+import java.util.List;
+import java.util.Map;
 
 public interface DbService {
     /**
@@ -9,6 +13,10 @@ public interface DbService {
      * @param resourceDB
      * @return
      */
-    public Boolean testConn(ResourceDB resourceDB) throws Exception;
+    public Boolean testConn(DatabaseSource resourceDB) throws Exception;
+
+    List<String> getTableHeader(DatabaseSource resourceDB ,String tableName) throws Exception ;
+
+    ListResult<Map<String, Object>> listSelectTableDataPreview(DatabaseSource resourceDB ,String tableName)throws Exception ;
 
 }

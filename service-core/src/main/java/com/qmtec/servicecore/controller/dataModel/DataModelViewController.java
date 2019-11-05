@@ -1,9 +1,13 @@
 package com.qmtec.servicecore.controller.dataModel;
 
+import com.alibaba.fastjson.JSONObject;
 import com.qmtec.common.page.ListResult;
 import com.qmtec.common.web.PageResultModel;
 import com.qmtec.common.web.ResultModel;
+import com.qmtec.servicecore.comm.ColumType;
 import com.qmtec.servicecore.entity.FileTemplate;
+import com.qmtec.servicecore.model.dto.DataModelDto;
+import com.qmtec.servicecore.service.dataModel.DataModelService;
 import com.qmtec.servicecore.service.flileTemplate.FileTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +28,21 @@ import java.util.Map;
 @Controller
 @RequestMapping("/DataModelView")
 public class DataModelViewController {
+
+    @Autowired
+    private DataModelService dataModelService;
+
+    private List<JSONObject> getColumType(){
+        List<JSONObject> list = new ArrayList<>();
+        ColumType[] columTypes =  ColumType.values();
+        for( ColumType columType: columTypes ){
+            JSONObject json = new JSONObject();
+            json.put("id",columType.getName());
+            json.put("name",columType.getName());
+            list.add(json);
+        }
+        return  list;
+    }
 
     /**
      * 跳转DataModel列表页
@@ -43,18 +64,18 @@ public class DataModelViewController {
      *
      * @return
      */
-    /*@RequestMapping(value = "/listSelectDataModelConfig", method = RequestMethod.POST)
+    @RequestMapping(value = "/listSelectDataModel", method = RequestMethod.POST)
     @ResponseBody
-    public PageResultModel<DataModelConfigDto> listSelectDataModelConfig(String searchParams, int page, int limit) {
+    public PageResultModel<DataModelDto> listSelectDataModel(String searchParams, int page, int limit) {
 
-        PageResultModel<DataModelConfigDto> pageResultModel = new PageResultModel<DataModelConfigDto>();
-        ListResult<DataModelConfigDto> listResult = DataModelConfigService.listSelectDataModelConfig(searchParams, page, limit);
+        PageResultModel<DataModelDto> pageResultModel = new PageResultModel<DataModelDto>();
+        ListResult<DataModelDto> listResult = dataModelService.listSelectDataMode(searchParams, page, limit);
         pageResultModel.setData(listResult.getResult());
         pageResultModel.setCount(listResult.getTotal());
         pageResultModel.setMsg("查询成功");
 
         return pageResultModel;
-    }*/
+    }
     
 
     /**
@@ -66,16 +87,10 @@ public class DataModelViewController {
     public ModelAndView addDataModel(int isAdd) {
 
         ModelAndView modelAndView = new ModelAndView();
-
-        /*modelAndView.addObject("PythonFileTemplates",
-                fileTemplateService.getFileTemplateByFileType(FileTemplate.Filetype.DataModelSCRIPT.getValue()));
-        modelAndView.addObject("JsonFileTemplates",
-                fileTemplateService.getFileTemplateByFileType(FileTemplate.Filetype.DataModelJSON.getValue()));
-
         modelAndView.addObject("isAdd", isAdd);
-        modelAndView.addObject("DataModelConfig", new DataModelConfigDto());*/
-        modelAndView.setViewName("/dataModel/form");
-
+        modelAndView.addObject("DataModel", new DataModelDto());
+        modelAndView.addObject("columTypes", getColumType());
+        modelAndView.setViewName("/dataModel/formInfo");
         return modelAndView;
     }
 
@@ -88,15 +103,10 @@ public class DataModelViewController {
     public ModelAndView updateDataModel(int isAdd, String id) {
 
         ModelAndView modelAndView = new ModelAndView();
-
-        /*modelAndView.addObject("PythonFileTemplates",
-                fileTemplateService.getFileTemplateByFileType(FileTemplate.Filetype.DataModelSCRIPT.getValue()));
-        modelAndView.addObject("JsonFileTemplates",
-                fileTemplateService.getFileTemplateByFileType(FileTemplate.Filetype.DataModelJSON.getValue()));
-
         modelAndView.addObject("isAdd", isAdd);
-        modelAndView.addObject("DataModelConfig", DataModelConfigService.updateDataModelConfigBefore(id));*/
-        modelAndView.setViewName("/DataModel/form");
+        modelAndView.addObject("DataModel", dataModelService.updateDataModeBefore(id));//获取对象
+        modelAndView.addObject("columTypes", getColumType());
+        modelAndView.setViewName("/dataModel/formInfo");
 
         return modelAndView;
     }
@@ -112,7 +122,7 @@ public class DataModelViewController {
     public ResultModel<Boolean> addOrUpdateDataModel(@RequestBody String data) {
 
         ResultModel<Boolean> resultModel = new ResultModel<>();
-        //resultModel.setData(DataModelConfigService.addOrUpdateDataModelConfig(data));
+        resultModel.setData(dataModelService.addOrUpdateDataMode(data));
         resultModel.setMessage("处理成功");
 
         return resultModel;
@@ -129,59 +139,10 @@ public class DataModelViewController {
     public ResultModel<Boolean> deleteDataModel(@RequestBody String data) {
 
         ResultModel<Boolean> resultModel = new ResultModel<>();
-        //resultModel.setData(DataModelConfigService.deleteDataModelConfig(data));
+        resultModel.setData(dataModelService.deleteDataMode(data));
         resultModel.setMessage("删除成功");
 
         return resultModel;
     }
 
-    /**--------------------------------------**/
-
-    @RequestMapping("/startDataModel")
-    @ResponseBody
-    public ResultModel<Boolean> startDataModel(@RequestBody String data) {
-
-        ResultModel<Boolean> resultModel = new ResultModel<>();
-        /*Map<String, Object> map = DataModelConfigService.startDataModel(data);
-        resultModel.setCode((int) map.get("code"));
-        resultModel.setData((Boolean) map.get("data"));
-        resultModel.setMessage((String) map.get("message"));*/
-
-        return resultModel;
-    }
-
-    /**
-     * 重启DataModel
-     *
-     * @return
-     */
-    @RequestMapping("/restartDataModel")
-    @ResponseBody
-    public ResultModel<Boolean> restartDataModel(@RequestBody String data) {
-
-        ResultModel<Boolean> resultModel = new ResultModel<>();
-        /*Map<String, Object> map = DataModelConfigService.restartDataModel(data);
-        resultModel.setData((Boolean) map.get("data"));
-        resultModel.setMessage((String) map.get("message"));
-*/
-        return resultModel;
-    }
-
-    /**
-     * 停止DataModel
-     *
-     * @return
-     */
-    @RequestMapping("/stopDataModel")
-    @ResponseBody
-    public ResultModel<Boolean> stopDataModel(@RequestBody String data) {
-
-        ResultModel<Boolean> resultModel = new ResultModel<>();
-        /*Map<String, Object> map = DataModelConfigService.stopDataModel(data);
-        resultModel.setCode((int) map.get("code"));
-        resultModel.setData((Boolean) map.get("data"));
-        resultModel.setMessage((String) map.get("message"));*/
-
-        return resultModel;
-    }
 }

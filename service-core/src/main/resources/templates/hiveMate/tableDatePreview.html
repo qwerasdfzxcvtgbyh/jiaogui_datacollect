@@ -38,15 +38,15 @@
             cols[i] = {field:d.columnName,title:d.columnName,maxWidth:120};
         }
 
-        var width = ColumnsDtoLists.length * 140;
-
+        //var width = ColumnsDtoLists.length * 140;
+        var tbWidth2 = $("#currentTableId").width();
         table.render({
             id: "currentTableId",
             elem: '#currentTableId',
             url: '/hiveMateView/listSelectTableDataPreview',
             method: 'post',
             cols: [cols],
-            width: width ,
+            width: tbWidth2 ,
             statusCode: 200,
             page: false,
             where:{

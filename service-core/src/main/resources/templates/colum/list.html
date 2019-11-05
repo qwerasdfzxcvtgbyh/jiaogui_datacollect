@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="layui-elem-field layuimini-search">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-input-inline">
+                                <select name="filetype">
+                                    <option value=""></option>
+                                    <option th:each="columtype : ${columTypes}" th:value="${columtype.id}"
+                                            th:text="${columtype.name }">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <a class="layui-btn" lay-submit="" lay-filter="data-search-btn">搜索</a>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <table class="layui-hide" id="columInfoTableId" lay-filter="columInfoTableId"></table>
+
+    </div>
+</div>
+
+<script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+
+<script th:inline="javascript">
+    var ids = new Array();       //全局已选的缓存
+    ids = window.parent.getIds();//父级页面已有的值
+
+    //当前表格中的全部数据:在表格的checkbox全选的时候没有得到数据, 因此用全局存放变量
+    var table_data = new Array();
+
+    function getCheckTemp() {
+        return ids;
+    }
+</script>
+
+<script>
+
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            util = layui.util,
+            table = layui.table;
+
+        table.render({
+            id: "columInfoTableId",
+            elem: '#columInfoTableId',
+            url: '/ColumInfoView/listSelectColumInfo',
+            method: 'post',
+            cols: [
+                [
+                    {type: "checkbox", width: 50, fixed: "left"}
+                    , {field: 'id', title: 'ID', width: 300, fixed: 'left'}
+                    , {field: 'name', title: '名称', width: 160}
+                    , {field: 'type', title: '类型', width: 160}
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            statusCode: 200,
+            page: true,
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+            , done: function (res, curr, count) {
+
+                //设置全部数据到全局变量
+                table_data = res.data;
+
+                for (var i = 0; i < res.data.length; i++) {
+                    for (var j = 0; j < ids.length; j++) {
+                        //数据id和要勾选的id相同时checkbox选中
+                        if (res.data[i].name == ids[j].name) {
+                            //这里才是真正的有效勾选
+                            res.data[i]["LAY_CHECKED"] = 'true';
+                            //找到对应数据改变勾选样式，呈现出选中效果
+                            var index = res.data[i]['LAY_TABLE_INDEX'];
+                            $('.layui-table-fixed-l tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                            $('.layui-table-fixed-l tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                        }
+                    }
+                }
+
+                //设置全选checkbox的选中状态，只有改变LAY_CHECKED的值， table.checkStatus才能抓取到选中的状态
+                var checkStatus = table.checkStatus('columInfoTableId');
+                if (checkStatus.isAll) {
+                    $(' .layui-table-header th[data-field="0"] input[type="checkbox"]').prop('checked', true);
+                    $('.layui-table-header th[data-field="0"] input[type="checkbox"]').next().addClass('layui-form-checked');
+                }
+
+                //以迟子的优先
+                for (var j = 0; j < ids.length; j++) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        if (res.data[i].name == ids[j].name) {
+                            if (ids[j].type != res.data[i].type) {
+                                ids[j].type = res.data[i].type;
+                            }
+                        }
+                    }
+                }
+
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            //执行搜索重载
+            table.reload('columInfoTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+            return false;
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(columInfoTableId)', function (obj) {
+            if (obj.checked == true) {//选中
+                if (obj.type == 'one') {
+                    if (!isInArray(ids, obj.data.name)) {
+                        one_add(obj);
+                    } else {
+                        one_overwriye(ids, obj);
+                    }
+                } else {
+                    for (var i = 0; i < table_data.length; i++) {
+                        if (!isInArray(ids, table_data[i].name)) {
+                            all_add(table_data[i]);
+                        } else {
+                            all_overwriye(ids, table_data[i])
+                        }
+                    }
+                }
+            } else {//取消
+                if (obj.type == 'one') {
+                    if (isInArray(ids, obj.data.name)) {
+                        removeByValue(obj.data.name);
+                    }
+                } else {
+                    for (var j = 0; j < table_data.length; j++) {
+                        if (isInArray(ids, table_data[j].name)) {
+                            removeByValue(table_data[j].name);
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+
+    function one_add(obj) {
+        var d = {};
+        d["type"] = obj.data.type;
+        d["name"] = obj.data.name;
+        ids.push(d);
+    }
+
+    function all_add(obj) {
+        var d = {};
+        d["type"] = obj.type;
+        d["name"] = obj.name;
+        ids.push(d);
+    }
+
+    function one_overwriye(arr, obj) {
+        for (var i = 0; i < arr.length; i++) {
+            if (obj.data.name === arr[i].name) {
+                if (obj.data.type != arr[i].type) {
+                    arr[i].type = obj.data.type;
+                }
+            }
+        }
+    }
+
+    function all_overwriye(arr, obj) {
+        for (var i = 0; i < arr.length; i++) {
+            if (obj.name === arr[i].name) {
+                if (obj.type != arr[i].type) {
+                    arr[i].type = obj.type;
+                }
+            }
+        }
+    }
+
+    //判断是否存在数据中
+    function isInArray(arr, value) {
+        for (var i = 0; i < arr.length; i++) {
+            if (value === arr[i].name) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 数组对象增加删除方法 数组.removeByValue(需删除的值)即可调用
+    function removeByValue(val) {
+        for (var i = 0, row; i < ids.length; i++) {
+            row = ids[i];
+            if (row.name == val) {
+                ids.splice(i, 1);
+                break;
+            }
+        }
+    }
+</script>
+<script>
+
+</script>
+
+</body>
+</html>

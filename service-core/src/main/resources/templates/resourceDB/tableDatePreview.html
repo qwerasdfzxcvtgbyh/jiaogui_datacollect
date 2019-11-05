@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+    </div>
+</div>
+
+<script src="/lib/jquery-3.3.1/jquery-3.3.1.js" charset="utf-8"></script>
+<script src="/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+
+<script th:inline="javascript">
+    var dbId = [[${dbId}]];
+    var tabName = [[${tabName}]];
+    var ColumnsDtoLists = [[${ColumnsDtoLists}]];
+</script>
+
+<script>
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            util = layui.util,
+            table = layui.table;
+
+        //动态生成表头
+        var cols = [];
+        for(var i=0;i<ColumnsDtoLists.length;i++){
+            var d  = ColumnsDtoLists[i];
+            cols[i] = {field:d,title:d,maxWidth:120};
+        }
+
+        //var width = ColumnsDtoLists.length * 140;
+        var tbWidth = $("#currentTableId").width();
+        table.render({
+            id: "currentTableId",
+            elem: '#currentTableId',
+            url: '/resourceDBView/listSelectTableDataPreview',
+            method: 'post',
+            cols: [cols],
+            width: tbWidth ,
+            statusCode: 200,
+            page: false,
+            where:{
+                dbId : dbId,
+                tabName:tabName
+            },
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            }
+        });
+    });
+</script>
+</body>
+</html>

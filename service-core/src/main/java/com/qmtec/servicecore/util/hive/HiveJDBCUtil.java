@@ -3,10 +3,15 @@ package com.qmtec.servicecore.util.hive;
 
 import com.alibaba.fastjson.JSON;
 import com.qmtec.common.util.PropertiesUtil;
+import org.springframework.util.StringUtils;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class HiveJDBCUtil {
     private static String hiveJdbcDriverName = "org.apache.hive.jdbc.HiveDriver";
@@ -40,20 +45,44 @@ public class HiveJDBCUtil {
         }
     }
 
-    public static void main(String[] args) throws SQLException {
-       /* try {
-            Class.forName(hiveJdbcDriverName);
-        } catch (ClassNotFoundException var5) {
-            var5.printStackTrace();
-            System.exit(1);
+    public static void main(String[] args) throws Exception {
+        //String s = "as first_register_time";
+        //String d = "as pay_count";
+
+
+        //String tabname = "st_newcrm_014_brand_day";
+        //String tabname  = "st_newcrm_014_brand_month";
+        //String tabname  = "st_newcrm_014_shop_day";
+        //String tabname  = "st_newcrm_014_shop_month";
+        //String tabname  = "st_newcrm_014_channel_day";
+        //String tabname  = "st_newcrm_014_channel_month";
+
+        String[] tabnames  = {"st_new_crm_025_shop_space_id",
+                "st_new_crm_025_channel_type"
+        };
+
+
+
+        for(String tabname : tabnames){
+            //dim_crm   dwm_crm
+            HiveDBOperator.HiveQueryResult result = HiveDBOperator.query(
+                    "dwm_crm", "desc " + tabname);
+            String colum = "";
+            for (Map<String, Object> mapList : result.getResult()) {
+                String c = (String) mapList.get("col_name");
+                if (!StringUtils.isEmpty(c)) {
+                    colum = colum + c + ",";
+                } else {
+                    break;
+                }
+            }
+            colum = colum.substring(0, colum.lastIndexOf(","));
+            System.out.println(tabname + " ::==>");
+            System.out.println(colum);
+            System.out.println("====================================");
         }
-
-        Connection con = DriverManager.getConnection("jdbc:hive2://192.168.15.61:10000", "hive", "hive");
-        System.err.println(con);
-        Statement stmt = con.createStatement();
-        String sql = "select * from ceshi.test1 limit 10";
-        stmt.executeQuery(sql);*/
-
-        System.out.println(JSON.toJSONString(HiveDBOperator.query("default","select * from t_hm_category limit 200")));
     }
+
+
+
 }

@@ -17,17 +17,17 @@ public class ResourceDbDto implements Cloneable, Serializable {
 
     private String name;
 
-    private Date createTime;
-
-    private Date modifyTime;
-
-    private Date startupTime;
-
     private String remark;
 
     private Integer databaseType;
     private String  databaseTypeName;
 
     private String define;
+
+    private Date createTime;
+
+    private Date modifyTime;
+
+    private Date startupTime;
 
 }

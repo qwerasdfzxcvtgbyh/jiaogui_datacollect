@@ -63,7 +63,7 @@
         table.render({
             id: "dataModelTableId",
             elem: '#dataModelTableId',
-            url: '#',
+            url: '/DataModelView/listSelectDataModel',
             method: 'post',
             cols: [
                 [
@@ -89,7 +89,6 @@
                     "count": res.count, //解析数据长度
                     "data": res.data //解析数据列表
                 };
-
             }
         });
 
@@ -110,20 +109,22 @@
 
         // 监听添加操作
         $(".data-add-btn").on("click", function () {
-            layer.open({
+            var index = layer.open({
                 type: 2,
-                title: "添加",
+                title: '添加',
                 shadeClose: true,
                 shade: false,
-                maxmin: true, //开启最大化最小化按钮
-                area: ['700px', '710px'],
+                resize: false,
+                maxmin: false, //开启最大化最小化按钮
+                area: ['800px', '800px'],
                 content: "/DataModelView/addDataModel?isAdd=1"
             });
+            layer.full(index);
         });
 
         // 监听删除操作
         $(".data-delete-btn").on("click", function () {
-            var checkStatus = table.checkStatus('fileTemplateTableId')
+            var checkStatus = table.checkStatus('dataModelTableId')
                 , data = checkStatus.data;
 
             var contextList = new Array(data.length);
@@ -150,15 +151,17 @@
             var data = obj.data;
             if (obj.event === 'edit') {
                 var id = data.id;
-                layer.open({
+                var index= layer.open({
                     type: 2,
                     title: "修改",
                     shadeClose: true,
                     shade: false,
-                    maxmin: true, //开启最大化最小化按钮
-                    area: ['700px', '710px'],
+                    resize: false,
+                    maxmin: false, //开启最大化最小化按钮
+                    area: ['800px', '800px'],
                     content: "/DataModelView/updateDataModel?isAdd=0&id=" + id
                 });
+                layer.full(index);
 
             } else if (obj.event === 'delete') {
                 var contextList = new Array(1);
